@@ -172,7 +172,7 @@ border-radius: 5px;
               <number>10</number>
              </property>
              <item>
-              <widget class="QCheckBox" name="cbxTrybSieciowy">
+              <widget class="QCheckBox" name="checkBoxTrybSieciowy">
                <property name="text">
                 <string>Tryb Sieciowy</string>
                </property>
@@ -199,7 +199,7 @@ border-radius: 5px;
 background: white;</string>
              </property>
              <property name="text">
-              <string>Brak połączenia</string>
+              <string>Rozłączono</string>
              </property>
             </widget>
            </item>
@@ -257,22 +257,12 @@ background: white;</string>
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBoxPort">
-               <property name="minimum">
-                <number>0</number>
-               </property>
-               <property name="maximum">
-                <number>65535</number>
-               </property>
-              </widget>
+              <widget class="QSpinBox" name="spinBoxPort"/>
              </item>
             </layout>
            </item>
            <item>
             <widget class="QPushButton" name="btnPolacz">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
              <property name="text">
               <string>Połącz</string>
              </property>

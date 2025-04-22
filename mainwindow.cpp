@@ -7,7 +7,6 @@
 #include <QMessageBox>
 #include "ui_mainwindow.h"
 #include <vector>
-#include <QDebug>
 
 // skok jednostkowy param: wartość
 // sygnal prostokatny param: wartość, czas
@@ -38,12 +37,11 @@ double vChartSterowanieMaxRange = vChartSterowanieMaxRangeDefault;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    ,netMan(new NetMan(this))
 
 {
     ui->setupUi(this);
+
     ui->spinBoxPort->setRange(0,65535);
-    ui->spinBoxPort->setValue(1234);
 
     chart = new QChart;
     outSeries = new QLineSeries();
@@ -142,8 +140,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::updateChart);
-
-    connect(ui->cbxTrybSieciowy, &QCheckBox::stateChanged,this, &MainWindow::on_cbxTrybSieciowy_stateChanged);
 }
 
 MainWindow::~MainWindow()
@@ -684,116 +680,128 @@ void MainWindow::on_checkBoxCalkaPodSuma_toggled(bool checked)
     pid->ustawCalkaPodSuma(checked);
 }
 
-void MainWindow::on_btnPolacz_clicked() {
-    // Pobieramy dane z UI
-    QString ip = ui->lineEditIP->text();
-    quint16 port = static_cast<quint16>(ui->spinBoxPort->value());
-    QString mode = ui->comboBoxRola->currentText();
+void MainWindow::resetServer()
+{
+    if(m_server != nullptr)
+    {
+        m_server->stopListening();
+        delete m_server;
+    }
+    m_server = new MyTCPServer(this);
+    connect(m_server,SIGNAL(newClientConnected(QString)),this,SLOT(slot_newClientConnected(QString)));
+    connect(m_server,SIGNAL(clientDisconnetced(int)),this,SLOT(slot_clientDisconnected(int)));
+    //connect(m_server,SIGNAL(newMsgFrom(QString,int)),this,SLOT(slot_newMsgFrom(QString,int)));
+}
 
-    // Zmienna do przechowywania trybu, który jest obecnie serwerem
-    static QString currentServerMode = "";
+bool MainWindow::validatePort(int port)
+{
+    if(port < 0 || 65535 < port)
+    {
+        ui->lineEditStan->setText("Invalid TCP port number!");
+        return false;
+    }
+    return true;
+}
 
-    // Sprawdzamy, czy wybrany tryb to ModelARX lub Regulator
-    if (mode == "ModelARX" || mode == "Regulator") {
-        // Jeśli jeszcze nie uruchomiono serwera
-        if (currentServerMode.isEmpty()) {
-            // Jeśli nie ma serwera, uruchamiamy serwer na wybranym trybie
-            currentServerMode = mode;  // Ten tryb uruchamia serwer
+void MainWindow::resetClient()
+{
+    if(m_client != nullptr)
+    {
+        m_client->disconnectFrom();
+        delete m_client;
+    }
+    m_client = new MyTCPClient(this);
+    connect(m_client,SIGNAL(connected(QString,int)),this,SLOT(slot_connected(QString,int)));
+    connect(m_client,SIGNAL(disconnected()),this,SLOT(slot_disconnected()));
+    //connect(m_client,SIGNAL(messageRecived(QString)),this,SLOT(slot_messageRecived(QString)));
+}
 
-            // Uruchamiamy serwer na podstawie wybranego trybu
-            if (mode == "ModelARX") {
-                netMan->startServer(port);  // Uruchamiamy serwer dla ModelARX
-                ui->lineEditStan->setText("Uruchomiono serwer jako ModelARX");
-                ui->lineEditStan->setStyleSheet("QLineEdit{ color: blue; background: white; }");
-                trybModelARX();
-            } else if (mode == "Regulator") {
-                netMan->startServer(port);  // Uruchamiamy serwer dla Regulatora
-                ui->lineEditStan->setText("Uruchomiono serwer jako Regulator");
-                ui->lineEditStan->setStyleSheet("QLineEdit{ color: blue; background: white; }");
-                trybRegulator();
+bool MainWindow::validateConnectionData(QString adr, int port)
+{
+    QHostAddress ipAdr(adr);
+    if(ipAdr.protocol() != QAbstractSocket::IPv4Protocol)
+    {
+        ui->lineEditStan->setText("Invalid IPv4 Address!");
+        return false;
+    }
+    if(port < 0 || 65535 < port)
+    {
+        ui->lineEditStan->setText("Invalid TCP port number!");
+        return false;
+    }
+    return true;
+}
+
+void MainWindow::slot_newClientConnected(QString adr)
+{
+    ui->lineEditStan->setText("New client from: " + adr);
+    updateCliNum();
+}
+
+void MainWindow::slot_clientDisconnected(int num)
+{
+    ui->lineEditStan->setText("Client " + QString::number(num) + " disconnected!");
+    qDebug() << "Client " + QString::number(num) + " disconnected!";
+    updateCliNum();
+}
+
+void MainWindow::updateCliNum()
+{
+    int numCli = m_server->getNumClients();
+}
+
+void MainWindow::slot_connected(QString adr, int port)
+{
+    ui->lineEditStan->setText("Connected to " + adr + " " + QString::number(port));
+}
+
+void MainWindow::slot_disconnected()
+{
+    ui->lineEditStan->setText("Disconnected");
+}
+
+void MainWindow::on_btnPolacz_clicked()
+{
+    if (ui->checkBoxTrybSieciowy->isChecked()) {
+        QString host = ui->lineEditIP->text();
+
+        if (ui->comboBoxRola->currentIndex() == 0) {
+            // Regulator jako serwer
+            if(m_server != nullptr && m_server->isListening())
+            {
+                m_server->stopListening();
+                ui->lineEditStan->setText("Start serwera");
+            }
+            else
+            {
+                int port = ui->spinBoxPort->text().toInt();
+                if(!validatePort(port))
+                    return;
+                resetServer();
+                if(!m_server->startListening(port))
+                    ui->lineEditStan->setText("Error starting server!");
+                else
+                {
+                    ui->lineEditStan->setText("Stop serwera");
+                }
             }
         } else {
-            // Jeśli serwer już działa, łączymy się jako klient
-            if (currentServerMode == "ModelARX" && mode == "Regulator") {
-                // Jeśli ModelARX jest serwerem, uruchamiamy klienta dla Regulatora
-                netMan->startClient(ip, port);  // Regulator działa jako klient
-                ui->lineEditStan->setText("Połączono z serwerem ModelARX jako Regulator");
-                ui->lineEditStan->setStyleSheet("QLineEdit{ color: green; background: white; }");
-                trybRegulator();
-            } else if (currentServerMode == "Regulator" && mode == "ModelARX") {
-                // Jeśli Regulator jest serwerem, uruchamiamy klienta dla ModelARX
-                netMan->startClient(ip, port);  // ModelARX działa jako klient
-                ui->lineEditStan->setText("Połączono z serwerem Regulator jako ModelARX");
-                ui->lineEditStan->setStyleSheet("QLineEdit{ color: green; background: white; }");
-                trybModelARX();
-            }
+            // ModelARX jako klient
+            QString host = ui->lineEditIP->text();
+            int port = ui->spinBoxPort->text().toInt();
+            if(!validateConnectionData(host, port))
+                return;
+            resetClient();
+            m_client->connectTo(host,port);
+            ui->lineEditStan->setText("ModelARX: łączenie z " + host + ":" + QString::number(port));
         }
     } else {
-        // W przypadku nieznanego trybu
-        ui->lineEditStan->setText("Nieznany tryb połączenia");
-        ui->lineEditStan->setStyleSheet("QLineEdit{ color: black; background: white; }");
+        ui->lineEditStan->setText("Praca stacjonarna");
     }
-}
 
-void MainWindow::trybModelARX(){
-    ui->groupBoxPID->setDisabled(true);
-    ui->groupBoxSignal->setDisabled(true);
-    ui->pushButtonStart->setDisabled(true);
-    ui->pushButtonSave->setDisabled(true);
-    ui->pushButtonLoad->setDisabled(true);
-    ui->pushButtonStop->setDisabled(true);
-    ui->pushButtonReset->setDisabled(true);
-    ui->spinBoxInterval->setDisabled(true);
-    ui->checkBoxCalkaPodSuma->setDisabled(true);
-    ui->pushButtonARX->setEnabled(true);
-    ui->doubleSpinBoxNoise->setEnabled(true);
-}
-void MainWindow::trybRegulator(){
-    ui->groupBoxPID->setEnabled(true);
-    ui->groupBoxSignal->setEnabled(true);
-    ui->pushButtonStart->setEnabled(true);
-    ui->pushButtonSave->setEnabled(true);
-    ui->pushButtonLoad->setEnabled(true);
-    ui->pushButtonStop->setEnabled(true);
-    ui->pushButtonReset->setEnabled(true);
-    ui->spinBoxInterval->setEnabled(true);
-    ui->checkBoxCalkaPodSuma->setEnabled(true);
-    ui->pushButtonARX->setDisabled(true);
-    ui->doubleSpinBoxNoise->setDisabled(true);
 }
 
 
 
-void MainWindow::on_cbxTrybSieciowy_stateChanged(int arg1)
-{
-    if(arg1 == Qt::Checked){
-        ui->groupBoxPID->setDisabled(true);
-        ui->groupBoxSignal->setDisabled(true);
-        ui->pushButtonStart->setDisabled(true);
-        ui->pushButtonSave->setDisabled(true);
-        ui->pushButtonLoad->setDisabled(true);
-        ui->pushButtonStop->setDisabled(true);
-        ui->pushButtonReset->setDisabled(true);
-        ui->spinBoxInterval->setDisabled(true);
-        ui->checkBoxCalkaPodSuma->setDisabled(true);
-        ui->pushButtonARX->setDisabled(true);
-        ui->doubleSpinBoxNoise->setDisabled(true);
 
-        ui->btnPolacz->setEnabled(true);
-    }else{
-        ui->groupBoxPID->setEnabled(true);
-        ui->groupBoxSignal->setEnabled(true);
-        ui->pushButtonStart->setEnabled(true);
-        ui->pushButtonSave->setEnabled(true);
-        ui->pushButtonLoad->setEnabled(true);
-        ui->pushButtonStop->setEnabled(true);
-        ui->pushButtonReset->setEnabled(true);
-        ui->spinBoxInterval->setEnabled(true);
-        ui->checkBoxCalkaPodSuma->setEnabled(true);
-        ui->pushButtonARX->setEnabled(true);
-        ui->doubleSpinBoxNoise->setEnabled(true);
-
-        ui->btnPolacz->setDisabled(true);
-    }
-}
 

@@ -9,8 +9,10 @@
 #include "ProstyUAR.h"
 #include "RegulatorPID.h"
 #include "arxokno.h"
-#include "NetMan.h"
+#include "mytcpserver.h"
+#include "mytcpclient.h"
 
+class NetMan;
 class QChartView;
 class QChart;
 
@@ -52,13 +54,23 @@ private slots:
 
     void on_btnPolacz_clicked();
 
-    void on_cbxTrybSieciowy_stateChanged(int arg1);
+    void slot_newClientConnected(QString adr);
+    void slot_clientDisconnected(int num);
+    void slot_connected(QString adr, int port);
+    void slot_disconnected();
+    //void slot_newMsgFrom(QString msg, int num);
+    //void slot_messageRecived(QString msg);
 
 private:
     void resetDefaultValues();
     void resetChart();
     void resetAllSettings();
     void updateSettings();
+    void resetServer();
+    bool validatePort(int port);
+    bool validateConnectionData(QString adr, int port);
+    void resetClient();
+    void updateCliNum();
 
     Ui::MainWindow *ui = nullptr;
     QTimer *timer = nullptr;
@@ -92,10 +104,8 @@ private:
 
 
     // Siec:
-    NetMan* netMan = nullptr;
-
-    void trybModelARX();
-    void trybRegulator();
+    MyTCPServer *m_server = nullptr;
+    MyTCPClient *m_client = nullptr;
 };
 
 #endif // MAINWINDOW_H

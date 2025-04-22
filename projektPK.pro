@@ -16,16 +16,19 @@ SOURCES += \
     Testy_UAR.cpp \
     arxokno.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    mytcpclient.cpp \
+    mytcpserver.cpp
 
 # Pliki nagłówkowe
 HEADERS += \
     ModelARX.h \
-    NetMan.h \
     ProstyUAR.h \
     RegulatorPID.h \
     arxokno.h \
-    mainwindow.h
+    mainwindow.h \
+    mytcpclient.h \
+    mytcpserver.h
 
 # Pliki UI
 FORMS += \

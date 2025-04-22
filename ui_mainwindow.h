@@ -46,7 +46,7 @@ public:
     QGroupBox *groupBox;
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout_7;
-    QCheckBox *cbxTrybSieciowy;
+    QCheckBox *checkBoxTrybSieciowy;
     QLineEdit *lineEditStan;
     QComboBox *comboBoxRola;
     QHBoxLayout *horizontalLayout;
@@ -201,11 +201,11 @@ public:
         horizontalLayout_7 = new QHBoxLayout();
         horizontalLayout_7->setObjectName("horizontalLayout_7");
         horizontalLayout_7->setContentsMargins(-1, 10, -1, -1);
-        cbxTrybSieciowy = new QCheckBox(groupBox);
-        cbxTrybSieciowy->setObjectName("cbxTrybSieciowy");
-        cbxTrybSieciowy->setChecked(true);
+        checkBoxTrybSieciowy = new QCheckBox(groupBox);
+        checkBoxTrybSieciowy->setObjectName("checkBoxTrybSieciowy");
+        checkBoxTrybSieciowy->setChecked(true);
 
-        horizontalLayout_7->addWidget(cbxTrybSieciowy);
+        horizontalLayout_7->addWidget(checkBoxTrybSieciowy);
 
 
         verticalLayout_2->addLayout(horizontalLayout_7);
@@ -261,8 +261,6 @@ public:
 
         spinBoxPort = new QSpinBox(groupBox);
         spinBoxPort->setObjectName("spinBoxPort");
-        spinBoxPort->setMinimum(0);
-        spinBoxPort->setMaximum(65535);
 
         horizontalLayout_2->addWidget(spinBoxPort);
 
@@ -271,7 +269,6 @@ public:
 
         btnPolacz = new QPushButton(groupBox);
         btnPolacz->setObjectName("btnPolacz");
-        btnPolacz->setEnabled(false);
 
         verticalLayout_2->addWidget(btnPolacz);
 
@@ -534,8 +531,8 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         groupBox->setTitle(QCoreApplication::translate("MainWindow", "Po\305\202\304\205czenie Sieciowe", nullptr));
-        cbxTrybSieciowy->setText(QCoreApplication::translate("MainWindow", "Tryb Sieciowy", nullptr));
-        lineEditStan->setText(QCoreApplication::translate("MainWindow", "Brak po\305\202\304\205czenia", nullptr));
+        checkBoxTrybSieciowy->setText(QCoreApplication::translate("MainWindow", "Tryb Sieciowy", nullptr));
+        lineEditStan->setText(QCoreApplication::translate("MainWindow", "Roz\305\202\304\205czono", nullptr));
         comboBoxRola->setItemText(0, QCoreApplication::translate("MainWindow", "Regulator", nullptr));
         comboBoxRola->setItemText(1, QCoreApplication::translate("MainWindow", "ModelARX", nullptr));
 
