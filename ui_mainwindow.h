@@ -46,7 +46,7 @@ public:
     QGroupBox *groupBox;
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout_7;
-    QCheckBox *checkBoxTrybSieciowy;
+    QCheckBox *checkBoxTrybStacjonarny;
     QLineEdit *lineEditStan;
     QComboBox *comboBoxRola;
     QHBoxLayout *horizontalLayout;
@@ -56,6 +56,7 @@ public:
     QLabel *label_2;
     QSpinBox *spinBoxPort;
     QPushButton *btnPolacz;
+    QPushButton *testD;
     QGroupBox *groupBoxSignal;
     QGridLayout *gridLayout;
     QRadioButton *radioButtonUnit;
@@ -201,11 +202,11 @@ public:
         horizontalLayout_7 = new QHBoxLayout();
         horizontalLayout_7->setObjectName("horizontalLayout_7");
         horizontalLayout_7->setContentsMargins(-1, 10, -1, -1);
-        checkBoxTrybSieciowy = new QCheckBox(groupBox);
-        checkBoxTrybSieciowy->setObjectName("checkBoxTrybSieciowy");
-        checkBoxTrybSieciowy->setChecked(true);
+        checkBoxTrybStacjonarny = new QCheckBox(groupBox);
+        checkBoxTrybStacjonarny->setObjectName("checkBoxTrybStacjonarny");
+        checkBoxTrybStacjonarny->setChecked(true);
 
-        horizontalLayout_7->addWidget(checkBoxTrybSieciowy);
+        horizontalLayout_7->addWidget(checkBoxTrybStacjonarny);
 
 
         verticalLayout_2->addLayout(horizontalLayout_7);
@@ -274,6 +275,11 @@ public:
 
 
         verticalLayout->addWidget(groupBox);
+
+        testD = new QPushButton(centralwidget);
+        testD->setObjectName("testD");
+
+        verticalLayout->addWidget(testD);
 
         groupBoxSignal = new QGroupBox(centralwidget);
         groupBoxSignal->setObjectName("groupBoxSignal");
@@ -531,7 +537,7 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         groupBox->setTitle(QCoreApplication::translate("MainWindow", "Po\305\202\304\205czenie Sieciowe", nullptr));
-        checkBoxTrybSieciowy->setText(QCoreApplication::translate("MainWindow", "Tryb Sieciowy", nullptr));
+        checkBoxTrybStacjonarny->setText(QCoreApplication::translate("MainWindow", "Tryb Stacjonarny", nullptr));
         lineEditStan->setText(QCoreApplication::translate("MainWindow", "Roz\305\202\304\205czono", nullptr));
         comboBoxRola->setItemText(0, QCoreApplication::translate("MainWindow", "Regulator", nullptr));
         comboBoxRola->setItemText(1, QCoreApplication::translate("MainWindow", "ModelARX", nullptr));
@@ -540,6 +546,7 @@ public:
         lineEditIP->setText(QCoreApplication::translate("MainWindow", "127.0.0.1", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "Port:", nullptr));
         btnPolacz->setText(QCoreApplication::translate("MainWindow", "Po\305\202\304\205cz", nullptr));
+        testD->setText(QCoreApplication::translate("MainWindow", "Syr", nullptr));
         groupBoxSignal->setTitle(QCoreApplication::translate("MainWindow", "Sygna\305\202 wej\305\233ciowy", nullptr));
         radioButtonUnit->setText(QCoreApplication::translate("MainWindow", "jednostkowy", nullptr));
         labelValue->setText(QCoreApplication::translate("MainWindow", "warto\305\233\304\207:", nullptr));

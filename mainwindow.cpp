@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include "ui_mainwindow.h"
 #include <vector>
+#include <Serializer.h>
 
 // skok jednostkowy param: wartość
 // sygnal prostokatny param: wartość, czas
@@ -40,7 +41,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 {
     ui->setupUi(this);
-
     ui->spinBoxPort->setRange(0,65535);
 
     chart = new QChart;
@@ -762,7 +762,7 @@ void MainWindow::slot_disconnected()
 
 void MainWindow::on_btnPolacz_clicked()
 {
-    if (ui->checkBoxTrybSieciowy->isChecked()) {
+    if (ui->checkBoxTrybStacjonarny->isChecked() == false) {
         QString host = ui->lineEditIP->text();
 
         if (ui->comboBoxRola->currentIndex() == 0) {
@@ -795,13 +795,41 @@ void MainWindow::on_btnPolacz_clicked()
             m_client->connectTo(host,port);
             ui->lineEditStan->setText("ModelARX: łączenie z " + host + ":" + QString::number(port));
         }
-    } else {
-        ui->lineEditStan->setText("Praca stacjonarna");
     }
-
 }
 
 
 
 
+
+
+void MainWindow::on_testD_clicked()
+{
+    QByteArray serial = Serializer::serialize(*arx);
+    qDebug() << "Dane serial: " << serial;
+
+    ModelARX deserial = Serializer::deserialize(serial);
+    qDebug() << "Model: ";
+    qDebug() << "A: " << deserial.getA();
+    qDebug() << "B: " << deserial.getB();
+    qDebug() << "k: " << deserial.getK();
+    qDebug() << "z: " << deserial.getZ();
+}
+
+void MainWindow::on_checkBoxTrybStacjonarny_stateChanged(int arg1)
+{
+    if (ui->comboBoxRola->currentIndex() == 0) {
+        if(m_server != nullptr && m_server->isListening())
+        {
+            if(m_server->getNumClients() > 0){
+                //m_client->disconnectFrom(); // Trzeba dodać żeby to robił klienta po dostaniu informacji od serwera po sieci (Msg)
+            }
+            m_server->stopListening();
+            ui->lineEditStan->setText("Praca stacjonarna");
+        }
+    } else{
+        m_client->disconnectFrom();
+        ui->lineEditStan->setText("Serwer jest wyłączony");
+    }
+}
 

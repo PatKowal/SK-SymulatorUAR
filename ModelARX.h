@@ -24,6 +24,7 @@ public:
     std::vector<double> getA() const { return a; }
     std::vector<double> getB() const { return b; }
     int getK() const { return k; }
+    double getZ() const { return z; }
 
     void ustawA(std::vector<double> wartosc) { a = wartosc; }
     void ustawB(std::vector<double> wartosc) { b = wartosc; }

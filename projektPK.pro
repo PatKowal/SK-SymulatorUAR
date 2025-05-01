@@ -25,6 +25,7 @@ HEADERS += \
     ModelARX.h \
     ProstyUAR.h \
     RegulatorPID.h \
+    Serializer.h \
     arxokno.h \
     mainwindow.h \
     mytcpclient.h \

@@ -172,9 +172,9 @@ border-radius: 5px;
               <number>10</number>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBoxTrybSieciowy">
+              <widget class="QCheckBox" name="checkBoxTrybStacjonarny">
                <property name="text">
-                <string>Tryb Sieciowy</string>
+                <string>Tryb Stacjonarny</string>
                </property>
                <property name="checked">
                 <bool>true</bool>
@@ -269,6 +269,13 @@ background: white;</string>
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="testD">
+          <property name="text">
+           <string>Syr</string>
+          </property>
          </widget>
         </item>
         <item>
