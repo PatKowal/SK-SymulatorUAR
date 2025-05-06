@@ -847,12 +847,10 @@ void MainWindow::on_buttonKonfSieciowa_clicked()
     QComboBox trybCombo;
     trybCombo.addItems({"Regulator", "Model ARX"});
 
-    // Domyślne wartości, jeśli brak danych w GUI
     QString currentIP = ui->lineEditIP->text().isEmpty() ? "127.0.0.1" : ui->lineEditIP->text();
     int currentPort = ui->spinBoxPort->value();
-    if (currentPort == 0) currentPort = 1234; // lub ustaw np. 12345 jako wartość roboczą
+    if (currentPort == 0) currentPort = 1234;
 
-    // Wypełnienie pól
     ipEdit.setText(currentIP);
     portEdit.setText(QString::number(currentPort));
     trybCombo.setCurrentIndex(ui->comboBoxRola->currentIndex());
@@ -870,14 +868,11 @@ void MainWindow::on_buttonKonfSieciowa_clicked()
     if (dialog.exec() == QDialog::Accepted) {
         QString ip = ipEdit.text();
         QString port = portEdit.text();
-        //QString tryb = trybCombo.currentText();
 
-        // Przepisanie danych z dialogu do GUI
         ui->lineEditIP->setText(ip);
         ui->spinBoxPort->setValue(port.toInt());
         ui->comboBoxRola->setCurrentIndex(trybCombo.currentIndex());
 
-        // Wywołanie funkcji połączenia
         on_btnPolacz_clicked();
     }
 }
