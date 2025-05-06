@@ -8,6 +8,7 @@
 #include "ui_mainwindow.h"
 #include <vector>
 #include <Serializer.h>
+#include <QFormLayout>
 
 // skok jednostkowy param: wartość
 // sygnal prostokatny param: wartość, czas
@@ -782,7 +783,8 @@ void MainWindow::on_btnPolacz_clicked()
                     ui->lineEditStan->setText("Error starting server!");
                 else
                 {
-                    ui->lineEditStan->setText("Stop serwera");
+                    //ui->lineEditStan->setText("Stop serwera");
+                    ui->lineEditStan->setText("Serwer nasłuchuje na porcie " + QString::number(port));
                 }
             }
         } else {
@@ -832,4 +834,52 @@ void MainWindow::on_checkBoxTrybStacjonarny_stateChanged(int arg1)
         ui->lineEditStan->setText("Serwer jest wyłączony");
     }
 }
+
+
+void MainWindow::on_buttonKonfSieciowa_clicked()
+{
+    QDialog dialog(this);
+    dialog.setWindowTitle("Konfiguracja połączenia sieciowego");
+
+    QFormLayout form(&dialog);
+
+    QLineEdit ipEdit, portEdit;
+    QComboBox trybCombo;
+    trybCombo.addItems({"Regulator", "Model ARX"});
+
+    // Domyślne wartości, jeśli brak danych w GUI
+    QString currentIP = ui->lineEditIP->text().isEmpty() ? "127.0.0.1" : ui->lineEditIP->text();
+    int currentPort = ui->spinBoxPort->value();
+    if (currentPort == 0) currentPort = 1234; // lub ustaw np. 12345 jako wartość roboczą
+
+    // Wypełnienie pól
+    ipEdit.setText(currentIP);
+    portEdit.setText(QString::number(currentPort));
+    trybCombo.setCurrentIndex(ui->comboBoxRola->currentIndex());
+
+    form.addRow("IP:", &ipEdit);
+    form.addRow("Port:", &portEdit);
+    form.addRow("Tryb:", &trybCombo);
+
+    QDialogButtonBox buttons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
+    form.addWidget(&buttons);
+
+    connect(&buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    connect(&buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        QString ip = ipEdit.text();
+        QString port = portEdit.text();
+        //QString tryb = trybCombo.currentText();
+
+        // Przepisanie danych z dialogu do GUI
+        ui->lineEditIP->setText(ip);
+        ui->spinBoxPort->setValue(port.toInt());
+        ui->comboBoxRola->setCurrentIndex(trybCombo.currentIndex());
+
+        // Wywołanie funkcji połączenia
+        on_btnPolacz_clicked();
+    }
+}
+
 

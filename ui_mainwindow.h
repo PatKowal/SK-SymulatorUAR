@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 6.5.3
+** Created by: Qt User Interface Compiler version 6.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -55,7 +55,7 @@ public:
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_2;
     QSpinBox *spinBoxPort;
-    QPushButton *btnPolacz;
+    QPushButton *buttonKonfSieciowa;
     QPushButton *testD;
     QGroupBox *groupBoxSignal;
     QGridLayout *gridLayout;
@@ -108,7 +108,7 @@ public:
             MainWindow->setObjectName("MainWindow");
         MainWindow->setEnabled(true);
         MainWindow->resize(1900, 1000);
-        QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Maximum, QSizePolicy::Policy::Maximum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
@@ -126,14 +126,14 @@ public:
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(0);
         horizontalLayout_3->setObjectName("horizontalLayout_3");
-        horizontalLayout_3->setSizeConstraint(QLayout::SetMaximumSize);
+        horizontalLayout_3->setSizeConstraint(QLayout::SizeConstraint::SetMaximumSize);
         verticalLayout_3 = new QVBoxLayout();
         verticalLayout_3->setSpacing(0);
         verticalLayout_3->setObjectName("verticalLayout_3");
         verticalLayout_3->setContentsMargins(-1, -1, 0, -1);
         chartWidget = new QWidget(centralwidget);
         chartWidget->setObjectName("chartWidget");
-        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        QSizePolicy sizePolicy1(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Preferred);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(chartWidget->sizePolicy().hasHeightForWidth());
@@ -188,11 +188,11 @@ public:
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(0);
         verticalLayout->setObjectName("verticalLayout");
-        verticalLayout->setSizeConstraint(QLayout::SetMinimumSize);
+        verticalLayout->setSizeConstraint(QLayout::SizeConstraint::SetMinimumSize);
         verticalLayout->setContentsMargins(-1, -1, 0, -1);
         groupBox = new QGroupBox(centralwidget);
         groupBox->setObjectName("groupBox");
-        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Maximum);
+        QSizePolicy sizePolicy2(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Maximum);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
         sizePolicy2.setHeightForWidth(groupBox->sizePolicy().hasHeightForWidth());
@@ -204,6 +204,7 @@ public:
         horizontalLayout_7->setContentsMargins(-1, 10, -1, -1);
         checkBoxTrybStacjonarny = new QCheckBox(groupBox);
         checkBoxTrybStacjonarny->setObjectName("checkBoxTrybStacjonarny");
+        checkBoxTrybStacjonarny->setEnabled(true);
         checkBoxTrybStacjonarny->setChecked(true);
 
         horizontalLayout_7->addWidget(checkBoxTrybStacjonarny);
@@ -214,7 +215,7 @@ public:
         lineEditStan = new QLineEdit(groupBox);
         lineEditStan->setObjectName("lineEditStan");
         lineEditStan->setEnabled(false);
-        QSizePolicy sizePolicy3(QSizePolicy::Ignored, QSizePolicy::Fixed);
+        QSizePolicy sizePolicy3(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Fixed);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
         sizePolicy3.setHeightForWidth(lineEditStan->sizePolicy().hasHeightForWidth());
@@ -228,6 +229,7 @@ public:
         comboBoxRola->addItem(QString());
         comboBoxRola->addItem(QString());
         comboBoxRola->setObjectName("comboBoxRola");
+        comboBoxRola->setEnabled(false);
 
         verticalLayout_2->addWidget(comboBoxRola);
 
@@ -241,7 +243,8 @@ public:
 
         lineEditIP = new QLineEdit(groupBox);
         lineEditIP->setObjectName("lineEditIP");
-        QSizePolicy sizePolicy4(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        lineEditIP->setEnabled(false);
+        QSizePolicy sizePolicy4(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Fixed);
         sizePolicy4.setHorizontalStretch(0);
         sizePolicy4.setVerticalStretch(0);
         sizePolicy4.setHeightForWidth(lineEditIP->sizePolicy().hasHeightForWidth());
@@ -262,16 +265,17 @@ public:
 
         spinBoxPort = new QSpinBox(groupBox);
         spinBoxPort->setObjectName("spinBoxPort");
+        spinBoxPort->setEnabled(false);
 
         horizontalLayout_2->addWidget(spinBoxPort);
 
 
         verticalLayout_2->addLayout(horizontalLayout_2);
 
-        btnPolacz = new QPushButton(groupBox);
-        btnPolacz->setObjectName("btnPolacz");
+        buttonKonfSieciowa = new QPushButton(groupBox);
+        buttonKonfSieciowa->setObjectName("buttonKonfSieciowa");
 
-        verticalLayout_2->addWidget(btnPolacz);
+        verticalLayout_2->addWidget(buttonKonfSieciowa);
 
 
         verticalLayout->addWidget(groupBox);
@@ -356,7 +360,7 @@ public:
         lineEditA = new QLineEdit(groupBoxARX);
         lineEditA->setObjectName("lineEditA");
         lineEditA->setEnabled(false);
-        QSizePolicy sizePolicy5(QSizePolicy::Maximum, QSizePolicy::Fixed);
+        QSizePolicy sizePolicy5(QSizePolicy::Policy::Maximum, QSizePolicy::Policy::Fixed);
         sizePolicy5.setHorizontalStretch(0);
         sizePolicy5.setVerticalStretch(0);
         sizePolicy5.setHeightForWidth(lineEditA->sizePolicy().hasHeightForWidth());
@@ -545,7 +549,7 @@ public:
         label->setText(QCoreApplication::translate("MainWindow", "Adres IP:", nullptr));
         lineEditIP->setText(QCoreApplication::translate("MainWindow", "127.0.0.1", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "Port:", nullptr));
-        btnPolacz->setText(QCoreApplication::translate("MainWindow", "Po\305\202\304\205cz", nullptr));
+        buttonKonfSieciowa->setText(QCoreApplication::translate("MainWindow", "Konfiguracja sieciowa", nullptr));
         testD->setText(QCoreApplication::translate("MainWindow", "Syr", nullptr));
         groupBoxSignal->setTitle(QCoreApplication::translate("MainWindow", "Sygna\305\202 wej\305\233ciowy", nullptr));
         radioButtonUnit->setText(QCoreApplication::translate("MainWindow", "jednostkowy", nullptr));

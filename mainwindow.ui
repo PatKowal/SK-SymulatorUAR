@@ -60,7 +60,7 @@
        <number>0</number>
       </property>
       <property name="sizeConstraint">
-       <enum>QLayout::SetMaximumSize</enum>
+       <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
       </property>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -149,7 +149,7 @@ border-radius: 5px;
          <number>0</number>
         </property>
         <property name="sizeConstraint">
-         <enum>QLayout::SetMinimumSize</enum>
+         <enum>QLayout::SizeConstraint::SetMinimumSize</enum>
         </property>
         <property name="rightMargin">
          <number>0</number>
@@ -173,6 +173,9 @@ border-radius: 5px;
              </property>
              <item>
               <widget class="QCheckBox" name="checkBoxTrybStacjonarny">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
                <property name="text">
                 <string>Tryb Stacjonarny</string>
                </property>
@@ -205,6 +208,9 @@ background: white;</string>
            </item>
            <item>
             <widget class="QComboBox" name="comboBoxRola">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <item>
               <property name="text">
                <string>Regulator</string>
@@ -231,6 +237,9 @@ background: white;</string>
              </item>
              <item>
               <widget class="QLineEdit" name="lineEditIP">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -257,14 +266,18 @@ background: white;</string>
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBoxPort"/>
+              <widget class="QSpinBox" name="spinBoxPort">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
            <item>
-            <widget class="QPushButton" name="btnPolacz">
+            <widget class="QPushButton" name="buttonKonfSieciowa">
              <property name="text">
-              <string>Połącz</string>
+              <string>Konfiguracja sieciowa</string>
              </property>
             </widget>
            </item>

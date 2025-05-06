@@ -65,6 +65,8 @@ private slots:
 
     void on_checkBoxTrybStacjonarny_stateChanged(int arg1);
 
+    void on_buttonKonfSieciowa_clicked();
+
 private:
     void resetDefaultValues();
     void resetChart();
