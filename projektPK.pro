@@ -8,7 +8,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 # Pliki źródłowe
 SOURCES += \
     ModelARX.cpp \
-    PetlaSprzezeniaZwrotnego.cpp \
     ProstyUAR.cpp \
     RegulatorPID.cpp \
     Testy_ARX.cpp \

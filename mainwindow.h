@@ -67,6 +67,9 @@ private slots:
 
     void on_buttonKonfSieciowa_clicked();
 
+    void onRequestSerial();
+    void onRequestDane(double value);
+
 private:
     void resetDefaultValues();
     void resetChart();

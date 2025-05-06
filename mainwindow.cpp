@@ -807,15 +807,16 @@ void MainWindow::on_btnPolacz_clicked()
 
 void MainWindow::on_testD_clicked()
 {
-    QByteArray serial = Serializer::serialize(*arx);
-    qDebug() << "Dane serial: " << serial;
+    onRequestSerial();
+    //QByteArray serial = Serializer::serialize(*arx);
+    // qDebug() << "Dane serial: " << serial;
 
-    ModelARX deserial = Serializer::deserialize(serial);
-    qDebug() << "Model: ";
-    qDebug() << "A: " << deserial.getA();
-    qDebug() << "B: " << deserial.getB();
-    qDebug() << "k: " << deserial.getK();
-    qDebug() << "z: " << deserial.getZ();
+    // ModelARX deserial = Serializer::deserialize(serial);
+    // qDebug() << "Model: ";
+    // qDebug() << "A: " << deserial.getA();
+    // qDebug() << "B: " << deserial.getB();
+    // qDebug() << "k: " << deserial.getK();
+    // qDebug() << "z: " << deserial.getZ();
 }
 
 void MainWindow::on_checkBoxTrybStacjonarny_stateChanged(int arg1)
@@ -835,6 +836,25 @@ void MainWindow::on_checkBoxTrybStacjonarny_stateChanged(int arg1)
     }
 }
 
+void MainWindow::onRequestSerial()
+{
+    QByteArray serial = Serializer::serialize(*arx);
+
+    m_client->sendFramed(101, serial);
+    qDebug() << "[MainWindow] Sent ModelARX from MainWindow";
+}
+
+void MainWindow::onRequestDane(double value)
+{
+    double result = value + 42; // przykładowa operacja
+    QByteArray response;
+    QDataStream out(&response, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_6_0);
+    out << result;
+
+    m_client->sendFramed(102, response);
+    qDebug() << "[MainWindow] Sent result:" << result;
+}
 
 void MainWindow::on_buttonKonfSieciowa_clicked()
 {

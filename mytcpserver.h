@@ -15,6 +15,9 @@ public:
     void stopListening();
     int getNumClients();
     void sendMsg(QString msg, int numCli);
+    void sendFramed(quint8 type, const QByteArray& data, int clientIndex);
+    void requestModelARX(int clientIndex);
+    void requestCalc(double value, int clientIndex);
 
 signals:
     void newClientConnected(QString adr);
@@ -25,6 +28,7 @@ private slots:
     void slot_new_client();
     void slot_client_disconnetcted();
     void slot_newMsg();
+    void slotReadyRead();
 
 private:
     bool getClinetID();
