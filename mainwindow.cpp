@@ -153,7 +153,7 @@ MainWindow::~MainWindow()
 void MainWindow::updateChart()
 {
     //qDebug() << "UDPATE";
-
+    responseOnTime = false;
     double input = 0;
 
     time += newInterval / 1000.0;
@@ -198,6 +198,13 @@ void MainWindow::updateChart()
         }
         lastOutputReceived = OutputReceived;
         output = OutputReceived;
+        QTimer::singleShot(40, this, [this]() {
+            if(!responseOnTime){
+                ui->frameStatus->setStyleSheet("background-color: red;");
+            } else {
+                ui->frameStatus->setStyleSheet("background-color: green;");
+            }
+        });
     }
 
     // skalowanie w pionie wykres 1
@@ -699,6 +706,7 @@ void MainWindow::on_checkBoxCalkaPodSuma_toggled(bool checked)
 
 void MainWindow::onResultReceived(double result) {
     OutputReceived = result;
+    responseOnTime = true;
 }
 
 void MainWindow::resetServer()
@@ -1010,4 +1018,3 @@ void MainWindow::activeAll(){
     ui->doubleSpinBoxValue->setEnabled(true);
     ui->pushButtonARX->setEnabled(true);
 }
-

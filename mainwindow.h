@@ -120,6 +120,7 @@ private:
 
     double lastOutputReceived = 0.0;
     double OutputReceived = 0.0;
+    bool responseOnTime = false;
 };
 
 #endif // MAINWINDOW_H
