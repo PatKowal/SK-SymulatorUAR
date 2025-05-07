@@ -183,8 +183,22 @@ void MainWindow::updateChart()
             input = WARTOSC + AMPLITUDA * sin(x);
         }
     }
-
-    double output = uar->symuluj(input);
+    double output = 0.0;
+    if(ui->checkBoxTrybStacjonarny->isChecked()){
+        output = uar->symuluj(input);
+    } else {
+        if(ui->comboBoxRola->currentIndex() == 0 && m_server->getNumClients() > 0){ //Serwer
+            double inputPid = input - lastOutputReceived;
+            double pidOutput = pid->symuluj(inputPid);
+            QByteArray msg;
+            QDataStream out(&msg, QIODevice::WriteOnly);
+            out.setVersion(QDataStream::Qt_6_0);
+            out << pidOutput;
+            m_server->sendFramedToClients(2,msg);
+        }
+        lastOutputReceived = OutputReceived;
+        output = OutputReceived;
+    }
 
     // skalowanie w pionie wykres 1
     if (output > vChartMaxRange - 0.1) {
@@ -683,6 +697,10 @@ void MainWindow::on_checkBoxCalkaPodSuma_toggled(bool checked)
     pid->ustawCalkaPodSuma(checked);
 }
 
+void MainWindow::onResultReceived(double result) {
+    OutputReceived = result;
+}
+
 void MainWindow::resetServer()
 {
     if(m_server != nullptr)
@@ -694,6 +712,7 @@ void MainWindow::resetServer()
     connect(m_server,SIGNAL(newClientConnected(QString)),this,SLOT(slot_newClientConnected(QString)));
     connect(m_server,SIGNAL(clientDisconnetced(int)),this,SLOT(slot_clientDisconnected(int)));
     //connect(m_server,SIGNAL(newMsgFrom(QString,int)),this,SLOT(slot_newMsgFrom(QString,int)));
+    connect(m_server, &MyTCPServer::resultReceived, this, &MainWindow::onResultReceived);
 }
 
 bool MainWindow::validatePort(int port)
@@ -772,6 +791,9 @@ void MainWindow::on_btnPolacz_clicked()
 
         if (ui->comboBoxRola->currentIndex() == 0) {
             // Regulator jako serwer
+            if(m_client != nullptr){
+                m_client->disconnectFrom();
+            }
             if(m_server != nullptr && m_server->isListening())
             {
                 m_server->stopListening();
@@ -793,13 +815,18 @@ void MainWindow::on_btnPolacz_clicked()
             }
         } else {
             // ModelARX jako klient
+            if(m_server != nullptr && m_server->isListening())
+            {
+                m_server->stopListening();
+                delete m_server;
+            }
             QString host = ui->lineEditIP->text();
             int port = ui->spinBoxPort->text().toInt();
             if(!validateConnectionData(host, port))
                 return;
             resetClient();
+            ui->lineEditStan->setText("[CLIENT]: Nasłuchiwanie na " + host + ":" + QString::number(port));
             m_client->connectTo(host,port);
-            ui->lineEditStan->setText("[ModelARX - CLIENT]: Połaczono z " + host + ":" + QString::number(port));
         }
     }
 }
@@ -818,7 +845,7 @@ void MainWindow::on_testD_clicked()
             out.setVersion(QDataStream::Qt_6_0);
             double d = 5.0;
             out << d;
-            m_server->sendFramedToClients(1,msg);
+            m_server->sendFramedToClients(2,msg);
         }
     }
     //QByteArray serial = Serializer::serialize(*arx);
@@ -839,6 +866,8 @@ void MainWindow::on_checkBoxTrybStacjonarny_stateChanged(int arg1)
         {
             if(m_server->getNumClients() > 0){
                 //m_client->disconnectFrom(); // Trzeba dodać żeby to robił klienta po dostaniu informacji od serwera po sieci (Msg)
+                QByteArray msg;
+                m_server->sendFramedToClients(3,msg); // emit u klienta
             }
             m_server->stopListening();
             ui->lineEditStan->setText("Praca stacjonarna");
@@ -856,7 +885,7 @@ void MainWindow::onModelARXRequest(){
     qDebug() << "[MainWindow] ModelARX wysłany do serwera.";
 }
 void MainWindow::onSymulujRequest(double value){
-    double result = 2*value;
+    double result = arx->symuluj(value);
     QByteArray response;
     QDataStream out(&response, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_6_0);
@@ -947,6 +976,4 @@ void MainWindow::on_buttonKonfSieciowa_clicked()
         }
     }
 }
-
-
 

@@ -28,8 +28,9 @@ void MyTCPClient::connectTo(QString address, int port)
 
     if (!m_socket->waitForConnected(3000)) {
         qDebug() << "[CLIENT] Connection failed:" << m_socket->errorString();
+    } else {
+        qDebug() << "[CLIENT] Connected.";
     }
-    qDebug() << "[CLIENT] Connected.";
 }
 
 void MyTCPClient::disconnectFrom() { m_socket->close(); }
@@ -39,7 +40,6 @@ void MyTCPClient::disconnectFrom() { m_socket->close(); }
 void MyTCPClient::sendFramed(quint8 type, const QByteArray& data)
 {
     if (!m_socket->isValid() || m_socket->state() != QAbstractSocket::ConnectedState) {
-        qDebug() << "[CLIENT] Cannot send. Invalid or disconnected socket.";
         return;
     }
 
@@ -78,13 +78,15 @@ void MyTCPClient::slotReadyRead()
 
         if(type == 1){
             emit ModelARXRequest();
-            qDebug() << "[MainWindow] ModelARX emit ModelARX do serwera.";
+            // qDebug() << "[MainWindow] ModelARX emit ModelARX do serwera.";
         } else if (type == 2){
             QDataStream dataStream(&data, QIODevice::ReadOnly);
             double value;
             dataStream >> value;
             emit SymulujRequest(value);
-        } else {
+        } else if (type == 3) {
+            disconnectFrom();
+        }else {
             qDebug() << "[CLIENT] Nieznany typ wiadomości (nagłówke)" << type;
         }
     }

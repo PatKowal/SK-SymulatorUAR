@@ -68,6 +68,7 @@ private slots:
 
     void onModelARXRequest();
     void onSymulujRequest(double value);
+    void onResultReceived(double result);
 
 private:
     void resetDefaultValues();
@@ -115,6 +116,9 @@ private:
     MyTCPServer *m_server = nullptr;
     MyTCPClient *m_client = nullptr;
     bool trybStacjonarny = true;
+
+    double lastOutputReceived = 0.0;
+    double OutputReceived = 0.0;
 };
 
 #endif // MAINWINDOW_H

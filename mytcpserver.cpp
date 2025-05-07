@@ -140,6 +140,9 @@ void MyTCPServer::slotReadyRead()
             double result;
             payloadStream >> result;
             qDebug() << "[SERVER] Received dane result:" << result;
+            emit resultReceived(result);
+        } else if (type == 103) {
+
         } else {
             qDebug() << "[SERVER] Unknown message type:" << type;
         }
