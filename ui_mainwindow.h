@@ -534,7 +534,6 @@ public:
         MainWindow->setStatusBar(statusbar);
 
         retranslateUi(MainWindow);
-        QObject::connect(checkBoxTrybStacjonarny, &QCheckBox::clicked, buttonKonfSieciowa, &QPushButton::setDisabled);
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi

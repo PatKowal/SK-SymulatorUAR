@@ -911,9 +911,30 @@ void MainWindow::on_buttonKonfSieciowa_clicked()
 
     if (dialog.exec() == QDialog::Accepted) {
         bool isStacjonarny = stacjonarnyCheckbox.isChecked();
-        trybStacjonarny = isStacjonarny;
-
         ui->checkBoxTrybStacjonarny->setChecked(isStacjonarny);
+
+        QString selectedMode = trybCombo.currentText();
+        bool isRegulator = (selectedMode == "Regulator");
+
+        ui->doubleSpinBoxP->setEnabled(isRegulator);
+        ui->doubleSpinBoxI->setEnabled(isRegulator);
+        ui->doubleSpinBoxD->setEnabled(isRegulator);
+        ui->spinBoxInterval->setEnabled(isRegulator);
+        ui->doubleSpinBoxNoise->setEnabled(isRegulator);
+        ui->checkBoxCalkaPodSuma->setEnabled(isRegulator);
+        ui->pushButtonStart->setEnabled(isRegulator);
+        ui->pushButtonStop->setEnabled(isRegulator);
+        ui->pushButtonReset->setEnabled(isRegulator);
+        ui->pushButtonSave->setEnabled(isRegulator);
+        ui->pushButtonLoad->setEnabled(isRegulator);
+        ui->radioButtonRect->setEnabled(isRegulator);
+        ui->radioButtonSinus->setEnabled(isRegulator);
+        ui->radioButtonUnit->setEnabled(isRegulator);
+        ui->doubleSpinBoxSinusAmp->setEnabled(isRegulator);
+        ui->doubleSpinBoxTime->setEnabled(isRegulator);
+        ui->doubleSpinBoxValue->setEnabled(isRegulator);
+
+        ui->pushButtonARX->setEnabled(!isRegulator);
 
         if (!isStacjonarny) {
             QString ip = ipEdit.text();
