@@ -879,6 +879,7 @@ void MainWindow::on_checkBoxTrybStacjonarny_stateChanged(int arg1)
             }
             m_server->stopListening();
             ui->lineEditStan->setText("Zerwanie połączenia zmieniam na pracę stacjonarną.");
+            activeAll();
         }
     } else{
         m_client->disconnectFrom();
@@ -984,25 +985,29 @@ void MainWindow::on_buttonKonfSieciowa_clicked()
             on_btnPolacz_clicked();
         }
         else {
-            ui->doubleSpinBoxP->setEnabled(true);
-            ui->doubleSpinBoxI->setEnabled(true);
-            ui->doubleSpinBoxD->setEnabled(true);
-            ui->spinBoxInterval->setEnabled(true);
-            ui->doubleSpinBoxNoise->setEnabled(true);
-            ui->checkBoxCalkaPodSuma->setEnabled(true);
-            ui->pushButtonStart->setEnabled(true);
-            ui->pushButtonStop->setEnabled(true);
-            ui->pushButtonReset->setEnabled(true);
-            ui->pushButtonSave->setEnabled(true);
-            ui->pushButtonLoad->setEnabled(true);
-            ui->radioButtonRect->setEnabled(true);
-            ui->radioButtonSinus->setEnabled(true);
-            ui->radioButtonUnit->setEnabled(true);
-            ui->doubleSpinBoxSinusAmp->setEnabled(true);
-            ui->doubleSpinBoxTime->setEnabled(true);
-            ui->doubleSpinBoxValue->setEnabled(true);
-            ui->pushButtonARX->setEnabled(true);
+            activeAll();
         }
     }
+}
+
+void MainWindow::activeAll(){
+    ui->doubleSpinBoxP->setEnabled(true);
+    ui->doubleSpinBoxI->setEnabled(true);
+    ui->doubleSpinBoxD->setEnabled(true);
+    ui->spinBoxInterval->setEnabled(true);
+    ui->doubleSpinBoxNoise->setEnabled(true);
+    ui->checkBoxCalkaPodSuma->setEnabled(true);
+    ui->pushButtonStart->setEnabled(true);
+    ui->pushButtonStop->setEnabled(true);
+    ui->pushButtonReset->setEnabled(true);
+    ui->pushButtonSave->setEnabled(true);
+    ui->pushButtonLoad->setEnabled(true);
+    ui->radioButtonRect->setEnabled(true);
+    ui->radioButtonSinus->setEnabled(true);
+    ui->radioButtonUnit->setEnabled(true);
+    ui->doubleSpinBoxSinusAmp->setEnabled(true);
+    ui->doubleSpinBoxTime->setEnabled(true);
+    ui->doubleSpinBoxValue->setEnabled(true);
+    ui->pushButtonARX->setEnabled(true);
 }
 

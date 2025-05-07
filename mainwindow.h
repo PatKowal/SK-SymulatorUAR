@@ -69,6 +69,7 @@ private slots:
     void onModelARXRequest();
     void onSymulujRequest(double value);
     void onResultReceived(double result);
+    void activeAll();
 
 private:
     void resetDefaultValues();
