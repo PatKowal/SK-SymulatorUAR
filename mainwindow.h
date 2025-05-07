@@ -114,6 +114,7 @@ private:
     // Siec:
     MyTCPServer *m_server = nullptr;
     MyTCPClient *m_client = nullptr;
+    bool trybStacjonarny = true;
 };
 
 #endif // MAINWINDOW_H

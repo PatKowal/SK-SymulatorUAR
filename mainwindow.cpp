@@ -864,7 +864,6 @@ void MainWindow::onSymulujRequest(double value){
     m_client->sendFramed(102, response);
     qDebug() << "[MainWindow] Wysłany result do serwera:" << result;
 }
-
 void MainWindow::on_buttonKonfSieciowa_clicked()
 {
     QDialog dialog(this);
@@ -884,6 +883,11 @@ void MainWindow::on_buttonKonfSieciowa_clicked()
     portEdit.setText(QString::number(currentPort));
     trybCombo.setCurrentIndex(ui->comboBoxRola->currentIndex());
 
+    // Checkbox do trybu stacjonarnego
+    QCheckBox stacjonarnyCheckbox("Tryb stacjonarny");
+    stacjonarnyCheckbox.setChecked(trybStacjonarny);
+
+    form.addRow(&stacjonarnyCheckbox);
     form.addRow("IP:", &ipEdit);
     form.addRow("Port:", &portEdit);
     form.addRow("Tryb:", &trybCombo);
@@ -891,19 +895,40 @@ void MainWindow::on_buttonKonfSieciowa_clicked()
     QDialogButtonBox buttons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
     form.addWidget(&buttons);
 
+    // Reakcja na zmianę stanu checkboxa
+    auto updateWidgetsEnabledState = [&]() {
+        bool enabled = !stacjonarnyCheckbox.isChecked();
+        ipEdit.setEnabled(enabled);
+        portEdit.setEnabled(enabled);
+        trybCombo.setEnabled(enabled);
+    };
+
+    QObject::connect(&stacjonarnyCheckbox, &QCheckBox::toggled, updateWidgetsEnabledState);
+    updateWidgetsEnabledState(); // zastosuj domyślny stan
+
     connect(&buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
     connect(&buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
 
     if (dialog.exec() == QDialog::Accepted) {
-        QString ip = ipEdit.text();
-        QString port = portEdit.text();
+        bool isStacjonarny = stacjonarnyCheckbox.isChecked();
+        trybStacjonarny = isStacjonarny;
 
-        ui->lineEditIP->setText(ip);
-        ui->spinBoxPort->setValue(port.toInt());
-        ui->comboBoxRola->setCurrentIndex(trybCombo.currentIndex());
+        ui->checkBoxTrybStacjonarny->setChecked(isStacjonarny);
 
-        on_btnPolacz_clicked();
+        if (!isStacjonarny) {
+            QString ip = ipEdit.text();
+            QString port = portEdit.text();
+
+            ui->lineEditIP->setText(ip);
+            ui->spinBoxPort->setValue(port.toInt());
+            ui->comboBoxRola->setCurrentIndex(trybCombo.currentIndex());
+
+            on_btnPolacz_clicked();
+        } else {
+            qDebug() << "Użytkownik wybrał tryb stacjonarny — brak połączenia sieciowego.";
+        }
     }
 }
+
 
 

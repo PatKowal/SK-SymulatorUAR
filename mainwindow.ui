@@ -60,7 +60,7 @@
        <number>0</number>
       </property>
       <property name="sizeConstraint">
-       <enum>QLayout::SetMaximumSize</enum>
+       <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
       </property>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -149,7 +149,7 @@ border-radius: 5px;
          <number>0</number>
         </property>
         <property name="sizeConstraint">
-         <enum>QLayout::SetMinimumSize</enum>
+         <enum>QLayout::SizeConstraint::SetMinimumSize</enum>
         </property>
         <property name="rightMargin">
          <number>0</number>
@@ -174,13 +174,16 @@ border-radius: 5px;
              <item>
               <widget class="QCheckBox" name="checkBoxTrybStacjonarny">
                <property name="enabled">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <property name="text">
                 <string>Tryb Stacjonarny</string>
                </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
                <property name="checked">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
               </widget>
              </item>
