@@ -769,14 +769,15 @@ void MainWindow::slot_clientDisconnected(int num)
     qDebug() << "Client " + QString::number(num) + " disconnected!";
     updateCliNum();
     if(m_server->getNumClients() == 0){
-        ui->lineEditStan->setText(text + "| Zmiana na tryb stacjonarny!");
         ui->checkBoxTrybStacjonarny->setChecked(true);
+        on_checkBoxTrybStacjonarny_stateChanged(1);
     }
 }
 
 void MainWindow::updateCliNum()
 {
     int numCli = m_server->getNumClients();
+    Q_UNUSED(numCli);
 }
 
 void MainWindow::slot_connected(QString adr, int port)
@@ -867,6 +868,7 @@ void MainWindow::on_testD_clicked()
 
 void MainWindow::on_checkBoxTrybStacjonarny_stateChanged(int arg1)
 {
+    Q_UNUSED(arg1);
     if (ui->comboBoxRola->currentIndex() == 0) {
         if(m_server != nullptr && m_server->isListening())
         {
@@ -876,7 +878,7 @@ void MainWindow::on_checkBoxTrybStacjonarny_stateChanged(int arg1)
                 m_server->sendFramedToClients(3,msg); // emit u klienta
             }
             m_server->stopListening();
-            ui->lineEditStan->setText("Praca stacjonarna");
+            ui->lineEditStan->setText("Zerwanie połączenia zmieniam na pracę stacjonarną.");
         }
     } else{
         m_client->disconnectFrom();
