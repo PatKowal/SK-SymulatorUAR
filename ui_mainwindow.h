@@ -56,7 +56,6 @@ public:
     QLabel *label_2;
     QSpinBox *spinBoxPort;
     QPushButton *buttonKonfSieciowa;
-    QPushButton *testD;
     QGroupBox *groupBoxSignal;
     QGridLayout *gridLayout;
     QRadioButton *radioButtonUnit;
@@ -107,6 +106,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
         MainWindow->setEnabled(true);
+        MainWindow->resize(1400, 762);
         QSizePolicy sizePolicy(QSizePolicy::Policy::Maximum, QSizePolicy::Policy::Maximum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -278,11 +278,6 @@ public:
 
 
         verticalLayout->addWidget(groupBox);
-
-        testD = new QPushButton(centralwidget);
-        testD->setObjectName("testD");
-
-        verticalLayout->addWidget(testD);
 
         groupBoxSignal = new QGroupBox(centralwidget);
         groupBoxSignal->setObjectName("groupBoxSignal");
@@ -525,7 +520,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1431, 21));
+        menubar->setGeometry(QRect(0, 0, 1400, 21));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");
@@ -549,7 +544,6 @@ public:
         lineEditIP->setText(QCoreApplication::translate("MainWindow", "127.0.0.1", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "Port:", nullptr));
         buttonKonfSieciowa->setText(QCoreApplication::translate("MainWindow", "Konfiguracja sieciowa", nullptr));
-        testD->setText(QCoreApplication::translate("MainWindow", "Syr", nullptr));
         groupBoxSignal->setTitle(QCoreApplication::translate("MainWindow", "Sygna\305\202 wej\305\233ciowy", nullptr));
         radioButtonUnit->setText(QCoreApplication::translate("MainWindow", "jednostkowy", nullptr));
         labelValue->setText(QCoreApplication::translate("MainWindow", "warto\305\233\304\207:", nullptr));

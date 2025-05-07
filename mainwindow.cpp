@@ -840,7 +840,7 @@ void MainWindow::on_btnPolacz_clicked()
 
 
 
-
+/*
 void MainWindow::on_testD_clicked()
 {
     if(ui->comboBoxRola->currentIndex() == 0){ //Serwer
@@ -863,6 +863,7 @@ void MainWindow::on_testD_clicked()
     // qDebug() << "k: " << deserial.getK();
     // qDebug() << "z: " << deserial.getZ();
 }
+*/
 
 void MainWindow::on_checkBoxTrybStacjonarny_stateChanged(int arg1)
 {
@@ -889,6 +890,7 @@ void MainWindow::onModelARXRequest(){
     m_client->sendFramed(101, serial);
     qDebug() << "[MainWindow] ModelARX wysłany do serwera.";
 }
+
 void MainWindow::onSymulujRequest(double value){
     double result = arx->symuluj(value);
     QByteArray response;

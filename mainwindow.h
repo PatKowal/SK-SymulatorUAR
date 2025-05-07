@@ -60,7 +60,7 @@ private slots:
     //void slot_newMsgFrom(QString msg, int num);
     //void slot_messageRecived(QString msg);
 
-    void on_testD_clicked();
+    //void on_testD_clicked();
 
     void on_checkBoxTrybStacjonarny_stateChanged(int arg1);
 
