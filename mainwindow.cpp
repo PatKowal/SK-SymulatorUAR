@@ -5,6 +5,8 @@
 #include <QGridLayout>
 #include <QLineSeries>
 #include <QMessageBox>
+#include "arxokno.h"
+#include "qdialogbuttonbox.h"
 #include "ui_mainwindow.h"
 #include <vector>
 #include <Serializer.h>
@@ -715,6 +717,8 @@ void MainWindow::resetClient()
     connect(m_client,SIGNAL(connected(QString,int)),this,SLOT(slot_connected(QString,int)));
     connect(m_client,SIGNAL(disconnected()),this,SLOT(slot_disconnected()));
     //connect(m_client,SIGNAL(messageRecived(QString)),this,SLOT(slot_messageRecived(QString)));
+    connect(m_client, &MyTCPClient::ModelARXRequest, this, &MainWindow::onModelARXRequest);
+    connect(m_client, &MyTCPClient::SymulujRequest, this, &MainWindow::onSymulujRequest);
 }
 
 bool MainWindow::validateConnectionData(QString adr, int port)
@@ -795,7 +799,7 @@ void MainWindow::on_btnPolacz_clicked()
                 return;
             resetClient();
             m_client->connectTo(host,port);
-            ui->lineEditStan->setText("ModelARX: łączenie z " + host + ":" + QString::number(port));
+            ui->lineEditStan->setText("[ModelARX - CLIENT]: Połaczono z " + host + ":" + QString::number(port));
         }
     }
 }
@@ -807,7 +811,16 @@ void MainWindow::on_btnPolacz_clicked()
 
 void MainWindow::on_testD_clicked()
 {
-    onRequestSerial();
+    if(ui->comboBoxRola->currentIndex() == 0){ //Serwer
+        if(m_server->getNumClients() > 0){
+            QByteArray msg;
+            QDataStream out(&msg, QIODevice::WriteOnly);
+            out.setVersion(QDataStream::Qt_6_0);
+            double d = 5.0;
+            out << d;
+            m_server->sendFramedToClients(1,msg);
+        }
+    }
     //QByteArray serial = Serializer::serialize(*arx);
     // qDebug() << "Dane serial: " << serial;
 
@@ -836,24 +849,20 @@ void MainWindow::on_checkBoxTrybStacjonarny_stateChanged(int arg1)
     }
 }
 
-void MainWindow::onRequestSerial()
-{
+void MainWindow::onModelARXRequest(){
     QByteArray serial = Serializer::serialize(*arx);
 
     m_client->sendFramed(101, serial);
-    qDebug() << "[MainWindow] Sent ModelARX from MainWindow";
+    qDebug() << "[MainWindow] ModelARX wysłany do serwera.";
 }
-
-void MainWindow::onRequestDane(double value)
-{
-    double result = value + 42; // przykładowa operacja
+void MainWindow::onSymulujRequest(double value){
+    double result = 2*value;
     QByteArray response;
     QDataStream out(&response, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_6_0);
     out << result;
-
     m_client->sendFramed(102, response);
-    qDebug() << "[MainWindow] Sent result:" << result;
+    qDebug() << "[MainWindow] Wysłany result do serwera:" << result;
 }
 
 void MainWindow::on_buttonKonfSieciowa_clicked()

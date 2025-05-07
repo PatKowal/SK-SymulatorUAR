@@ -8,7 +8,6 @@
 #include "ModelARX.h"
 #include "ProstyUAR.h"
 #include "RegulatorPID.h"
-#include "arxokno.h"
 #include "mytcpserver.h"
 #include "mytcpclient.h"
 
@@ -67,8 +66,8 @@ private slots:
 
     void on_buttonKonfSieciowa_clicked();
 
-    void onRequestSerial();
-    void onRequestDane(double value);
+    void onModelARXRequest();
+    void onSymulujRequest(double value);
 
 private:
     void resetDefaultValues();

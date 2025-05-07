@@ -37,35 +37,41 @@ void MyTCPServer::sendMsg(QString msg, int numCli)
     }
 }
 
-void MyTCPServer::sendFramed(quint8 type, const QByteArray& data, int clientIndex)
+void MyTCPServer::sendFramedToClients(quint8 type, const QByteArray& data)
 {
-    if (clientIndex < 0 || clientIndex >= m_clients.size())
+    if (m_clients.isEmpty()) {
+        qDebug() << "[SERVER] Brak połączonych klientów!";
         return;
+    }
 
-    QTcpSocket* socket = m_clients[clientIndex];
     QByteArray frame;
     QDataStream out(&frame, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_6_0);
     out << type << quint32(data.size());
     frame.append(data);
 
-    socket->write(frame);
-    socket->flush();
+    for(QTcpSocket * client : m_clients){
+        if(client->state() == QAbstractSocket::ConnectedState){
+            client->write(frame);
+            client->flush();
+            qDebug() << "[SERVER] wysłano wiadomość do klienta" << client;
+        }
+    }
 }
 
-void MyTCPServer::requestModelARX(int clientIndex)
+void MyTCPServer::requestModelARX()
 {
-    sendFramed(1, QByteArray(), clientIndex);
+    sendFramedToClients(1, QByteArray());
 }
 
-void MyTCPServer::requestCalc(double value, int clientIndex)
+void MyTCPServer::requestCalc(double value)
 {
     QByteArray payload;
     QDataStream out(&payload, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_6_0);
     out << value;
 
-    sendFramed(2, payload, clientIndex);
+    sendFramedToClients(2, payload);
 }
 
 void MyTCPServer::slot_new_client()
@@ -76,8 +82,8 @@ void MyTCPServer::slot_new_client()
 
     m_clients.append(client);
     int idx = m_clients.indexOf(client);
-    QString clientMsg = "Hello client " + QString::number(idx);
-    client->write(clientMsg.toUtf8());
+    // QString clientMsg = "Hello client " + QString::number(idx);
+    // client->write(clientMsg.toUtf8());
 
     connect(client, &QTcpSocket::readyRead, this, &MyTCPServer::slotReadyRead);
     connect(client, &QTcpSocket::disconnected, this, &MyTCPServer::slot_client_disconnetcted);

@@ -29,17 +29,12 @@ void MyTCPClient::connectTo(QString address, int port)
     if (!m_socket->waitForConnected(3000)) {
         qDebug() << "[CLIENT] Connection failed:" << m_socket->errorString();
     }
+    qDebug() << "[CLIENT] Connected.";
 }
 
-void MyTCPClient::disconnectFrom()
-{
-    m_socket->close();
-}
+void MyTCPClient::disconnectFrom() { m_socket->close(); }
 
-void MyTCPClient::sendMsg(QString msg)
-{
-    m_socket->write(msg.toUtf8());
-}
+// void MyTCPClient::sendMsg(QString msg) { m_socket->write(msg.toUtf8()); }
 
 void MyTCPClient::sendFramed(quint8 type, const QByteArray& data)
 {
@@ -58,10 +53,7 @@ void MyTCPClient::sendFramed(quint8 type, const QByteArray& data)
     m_socket->flush();
 }
 
-void MyTCPClient::slot_connected()
-{
-    emit connected(m_ipAddress, m_port);
-}
+void MyTCPClient::slot_connected(){ emit connected(m_ipAddress, m_port); }
 
 void MyTCPClient::slotReadyRead()
 {
@@ -80,20 +72,20 @@ void MyTCPClient::slotReadyRead()
         if (m_buffer.size() < 5 + int(size))
             return;
 
-        QByteArray payload = m_buffer.mid(5, size);
+        QByteArray data = m_buffer.mid(5, size);
+
         m_buffer.remove(0, 5 + size);
 
-        QDataStream payloadStream(&payload, QIODevice::ReadOnly);
-        payloadStream.setVersion(QDataStream::Qt_6_0);
-
-        if (type == 1) {
-            emit requestSerial();
-        } else if (type == 2) {
+        if(type == 1){
+            emit ModelARXRequest();
+            qDebug() << "[MainWindow] ModelARX emit ModelARX do serwera.";
+        } else if (type == 2){
+            QDataStream dataStream(&data, QIODevice::ReadOnly);
             double value;
-            payloadStream >> value;
-            emit requestDane(value);
+            dataStream >> value;
+            emit SymulujRequest(value);
         } else {
-            qDebug() << "[CLIENT] Unknown message type:" << type;
+            qDebug() << "[CLIENT] Nieznany typ wiadomości (nagłówke)" << type;
         }
     }
 }

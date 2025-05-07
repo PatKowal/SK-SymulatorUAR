@@ -12,23 +12,18 @@ public:
     void connectTo(QString address, int port);
     void disconnectFrom();
     bool isConnected() {return m_socket->isOpen();}
-    void sendMsg(QString msg);
+    // void sendMsg(QString msg);
 
     void sendFramed(quint8 type, const QByteArray& data);
-    QTcpSocket* getSocket() {
-        return m_socket;
-    }
+    QTcpSocket* getSocket() { return m_socket; } // isValid()?
 signals:
     void connected(QString adr, int port);
     void disconnected();
-    void messageRecived(QString msg);
-
-    void requestSerial();
-    void requestDane(double value);
+    void ModelARXRequest();
+    void SymulujRequest(double value);
 
 private slots:
     void slot_connected();
-    // void slot_readyRead();
     void slotReadyRead();
 
 private:

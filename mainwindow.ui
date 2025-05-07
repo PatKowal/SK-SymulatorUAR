@@ -60,7 +60,7 @@
        <number>0</number>
       </property>
       <property name="sizeConstraint">
-       <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
+       <enum>QLayout::SetMaximumSize</enum>
       </property>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -149,7 +149,7 @@ border-radius: 5px;
          <number>0</number>
         </property>
         <property name="sizeConstraint">
-         <enum>QLayout::SizeConstraint::SetMinimumSize</enum>
+         <enum>QLayout::SetMinimumSize</enum>
         </property>
         <property name="rightMargin">
          <number>0</number>
@@ -180,7 +180,7 @@ border-radius: 5px;
                 <string>Tryb Stacjonarny</string>
                </property>
                <property name="checked">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -644,5 +644,22 @@ background: white;</string>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>checkBoxTrybStacjonarny</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>buttonKonfSieciowa</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>988</x>
+     <y>116</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1105</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

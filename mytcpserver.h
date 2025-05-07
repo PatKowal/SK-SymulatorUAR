@@ -15,9 +15,9 @@ public:
     void stopListening();
     int getNumClients();
     void sendMsg(QString msg, int numCli);
-    void sendFramed(quint8 type, const QByteArray& data, int clientIndex);
-    void requestModelARX(int clientIndex);
-    void requestCalc(double value, int clientIndex);
+    void sendFramedToClients(quint8 type, const QByteArray& data);
+    void requestModelARX();
+    void requestCalc(double value);
 
 signals:
     void newClientConnected(QString adr);
