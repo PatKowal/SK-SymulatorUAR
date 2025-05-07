@@ -764,9 +764,14 @@ void MainWindow::slot_newClientConnected(QString adr)
 
 void MainWindow::slot_clientDisconnected(int num)
 {
-    ui->lineEditStan->setText("Client " + QString::number(num) + " disconnected!");
+    QString text = "Client " + QString::number(num) + " disconnected!";
+    ui->lineEditStan->setText(text);
     qDebug() << "Client " + QString::number(num) + " disconnected!";
     updateCliNum();
+    if(m_server->getNumClients() == 0){
+        ui->lineEditStan->setText(text + "| Zmiana na tryb stacjonarny!");
+        ui->checkBoxTrybStacjonarny->setChecked(true);
+    }
 }
 
 void MainWindow::updateCliNum()
