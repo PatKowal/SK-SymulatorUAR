@@ -953,7 +953,6 @@ void MainWindow::on_buttonKonfSieciowa_clicked()
         ui->doubleSpinBoxI->setEnabled(isRegulator);
         ui->doubleSpinBoxD->setEnabled(isRegulator);
         ui->spinBoxInterval->setEnabled(isRegulator);
-        ui->doubleSpinBoxNoise->setEnabled(isRegulator);
         ui->checkBoxCalkaPodSuma->setEnabled(isRegulator);
         ui->pushButtonStart->setEnabled(isRegulator);
         ui->pushButtonStop->setEnabled(isRegulator);
@@ -968,6 +967,7 @@ void MainWindow::on_buttonKonfSieciowa_clicked()
         ui->doubleSpinBoxValue->setEnabled(isRegulator);
 
         ui->pushButtonARX->setEnabled(!isRegulator);
+        ui->doubleSpinBoxNoise->setEnabled(!isRegulator);
 
         if (!isStacjonarny) {
             QString ip = ipEdit.text();
