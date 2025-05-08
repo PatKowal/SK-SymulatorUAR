@@ -14,7 +14,6 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDoubleSpinBox>
-#include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
@@ -48,7 +47,7 @@ public:
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout_7;
     QCheckBox *checkBoxTrybStacjonarny;
-    QFrame *frameStatus;
+    QLabel *labelPing;
     QLineEdit *lineEditStan;
     QComboBox *comboBoxRola;
     QHBoxLayout *horizontalLayout;
@@ -210,12 +209,14 @@ public:
 
         horizontalLayout_7->addWidget(checkBoxTrybStacjonarny);
 
-        frameStatus = new QFrame(groupBox);
-        frameStatus->setObjectName("frameStatus");
-        frameStatus->setFrameShape(QFrame::StyledPanel);
-        frameStatus->setFrameShadow(QFrame::Raised);
+        labelPing = new QLabel(groupBox);
+        labelPing->setObjectName("labelPing");
+        sizePolicy.setHeightForWidth(labelPing->sizePolicy().hasHeightForWidth());
+        labelPing->setSizePolicy(sizePolicy);
+        labelPing->setMinimumSize(QSize(100, 0));
+        labelPing->setMaximumSize(QSize(328, 16777215));
 
-        horizontalLayout_7->addWidget(frameStatus);
+        horizontalLayout_7->addWidget(labelPing);
 
 
         verticalLayout_2->addLayout(horizontalLayout_7);
@@ -545,6 +546,7 @@ public:
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         groupBox->setTitle(QCoreApplication::translate("MainWindow", "Po\305\202\304\205czenie Sieciowe", nullptr));
         checkBoxTrybStacjonarny->setText(QCoreApplication::translate("MainWindow", "Tryb Stacjonarny", nullptr));
+        labelPing->setText(QString());
         lineEditStan->setText(QCoreApplication::translate("MainWindow", "Roz\305\202\304\205czono", nullptr));
         comboBoxRola->setItemText(0, QCoreApplication::translate("MainWindow", "Regulator", nullptr));
         comboBoxRola->setItemText(1, QCoreApplication::translate("MainWindow", "ModelARX", nullptr));

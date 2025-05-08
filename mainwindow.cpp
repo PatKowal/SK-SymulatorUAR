@@ -153,7 +153,6 @@ MainWindow::~MainWindow()
 void MainWindow::updateChart()
 {
     //qDebug() << "UDPATE";
-    responseOnTime = false;
     double input = 0;
 
     time += newInterval / 1000.0;
@@ -190,21 +189,17 @@ void MainWindow::updateChart()
         if(ui->comboBoxRola->currentIndex() == 0 && m_server->getNumClients() > 0){ //Serwer
             double inputPid = input - lastOutputReceived;
             double pidOutput = pid->symuluj(inputPid);
+
+            qint64 timeonsend = QDateTime::currentMSecsSinceEpoch();
+            // qDebug() << "[MAINWINDOW] timeonsend" << timeonsend;
             QByteArray msg;
             QDataStream out(&msg, QIODevice::WriteOnly);
             out.setVersion(QDataStream::Qt_6_0);
-            out << pidOutput;
+            out << pidOutput << timeonsend;
             m_server->sendFramedToClients(2,msg);
         }
         lastOutputReceived = OutputReceived;
         output = OutputReceived;
-        QTimer::singleShot(40, this, [this]() {
-            if(!responseOnTime){
-                ui->frameStatus->setStyleSheet("background-color: red;");
-            } else {
-                ui->frameStatus->setStyleSheet("background-color: green;");
-            }
-        });
     }
 
     // skalowanie w pionie wykres 1
@@ -704,9 +699,19 @@ void MainWindow::on_checkBoxCalkaPodSuma_toggled(bool checked)
     pid->ustawCalkaPodSuma(checked);
 }
 
-void MainWindow::onResultReceived(double result) {
+void MainWindow::onResultReceived(double result, qint64 timeonsend) {
+    qint64 currtime = QDateTime::currentMSecsSinceEpoch();
+    // qDebug() << "[CURRTIME] " << currtime;
+    // qDebug() << "[TIMEONSEND] " << timeonsend;
+    qint64 ping = currtime - timeonsend;
+    // qDebug() << "[PING] " << ping;
     OutputReceived = result;
-    responseOnTime = true;
+    ui->labelPing->setText(QString("%1 ms").arg(ping));
+    if(ping>ui->spinBoxInterval->value()){
+        ui->labelPing->setStyleSheet("color: red;");
+    } else {
+        ui->labelPing->setStyleSheet("color: green;");
+    }
 }
 
 void MainWindow::resetServer()
@@ -845,10 +850,6 @@ void MainWindow::on_btnPolacz_clicked()
     }
 }
 
-
-
-
-
 /*
 void MainWindow::on_testD_clicked()
 {
@@ -902,14 +903,14 @@ void MainWindow::onModelARXRequest(){
     qDebug() << "[MainWindow] ModelARX wysłany do serwera.";
 }
 
-void MainWindow::onSymulujRequest(double value){
+void MainWindow::onSymulujRequest(double value, qint64 timeonsend){
     double result = arx->symuluj(value);
     QByteArray response;
     QDataStream out(&response, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_6_0);
-    out << result;
+    out << result << timeonsend;
     m_client->sendFramed(102, response);
-    qDebug() << "[MainWindow] Wysłany result do serwera:" << result;
+    // qDebug() << "[MainWindow] Wysłany result do serwera:" << result;
 }
 
 void MainWindow::on_buttonKonfSieciowa_clicked()

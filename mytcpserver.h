@@ -23,7 +23,7 @@ signals:
     void newClientConnected(QString adr);
     void clientDisconnetced(int num);
     void newMsgFrom(QString, int num);
-    void resultReceived(double result);
+    void resultReceived(double result, qint64 timeonsend);
 
 private slots:
     void slot_new_client();

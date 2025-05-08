@@ -82,8 +82,11 @@ void MyTCPClient::slotReadyRead()
         } else if (type == 2){
             QDataStream dataStream(&data, QIODevice::ReadOnly);
             double value;
-            dataStream >> value;
-            emit SymulujRequest(value);
+            qint64 timeonsend;
+
+            dataStream >> value >> timeonsend;
+            // qDebug() << "[CLIENT] timeonsend" << timeonsend;
+            emit SymulujRequest(value, timeonsend);
         } else if (type == 3) {
             disconnectFrom();
         }else {

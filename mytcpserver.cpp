@@ -54,7 +54,7 @@ void MyTCPServer::sendFramedToClients(quint8 type, const QByteArray& data)
         if(client->state() == QAbstractSocket::ConnectedState){
             client->write(frame);
             client->flush();
-            qDebug() << "[SERVER] wysłano wiadomość do klienta" << client;
+            // qDebug() << "[SERVER] wysłano wiadomość do klienta" << client;
         }
     }
 }
@@ -138,9 +138,11 @@ void MyTCPServer::slotReadyRead()
                      << "z:" << model.getZ();
         } else if (type == 102) {
             double result;
-            payloadStream >> result;
-            qDebug() << "[SERVER] Received dane result:" << result;
-            emit resultReceived(result);
+            qint64 timeonsend;
+            payloadStream >> result >> timeonsend;
+            // qDebug() << "[SERVER] Received timeonsend:" << timeonsend;
+            // qDebug() << "[SERVER] Received dane result:" << result;
+            emit resultReceived(result, timeonsend);
         } else if (type == 103) {
 
         } else {

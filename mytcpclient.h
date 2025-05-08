@@ -20,7 +20,7 @@ signals:
     void connected(QString adr, int port);
     void disconnected();
     void ModelARXRequest();
-    void SymulujRequest(double value);
+    void SymulujRequest(double value, qint64 timeonsend);
 
 private slots:
     void slot_connected();
