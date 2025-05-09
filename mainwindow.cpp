@@ -750,6 +750,7 @@ bool MainWindow::validatePort(int port)
     if(port < 0 || 65535 < port)
     {
         ui->lineEditStan->setText("Niepoprawny numer portu!");
+        ui->lineEditStan->setStyleSheet("color: red;");
         return false;
     }
     return true;
@@ -776,11 +777,13 @@ bool MainWindow::validateConnectionData(QString adr, int port)
     if(ipAdr.protocol() != QAbstractSocket::IPv4Protocol)
     {
         ui->lineEditStan->setText("Niepoprawny adres IPv4!");
+        ui->lineEditStan->setStyleSheet("color: red;");
         return false;
     }
     if(port < 0 || 65535 < port)
     {
         ui->lineEditStan->setText("Nieprawidłowy numer portu!");
+         ui->lineEditStan->setStyleSheet("color: red;");
         return false;
     }
     return true;
@@ -788,15 +791,17 @@ bool MainWindow::validateConnectionData(QString adr, int port)
 
 void MainWindow::slot_newClientConnected(QString adr)
 {
-    ui->lineEditStan->setText("New client from: " + adr);
+    ui->lineEditStan->setText("Klient: " + adr);
+     ui->lineEditStan->setStyleSheet("color: green;");
     updateCliNum();
 }
 
 void MainWindow::slot_clientDisconnected(int num)
 {
-    QString text = "Client " + QString::number(num) + " disconnected!";
+    QString text = "Klient " + QString::number(num) + " się rozłączył!";
     ui->lineEditStan->setText(text);
-    qDebug() << "Client " + QString::number(num) + " disconnected!";
+    ui->lineEditStan->setStyleSheet("color: red;");
+    qDebug() << "Klient " + QString::number(num) + " się rozłączył!";
     updateCliNum();
     if(m_server->getNumClients() == 0){
         ui->checkBoxTrybStacjonarny->setChecked(true);
@@ -813,11 +818,13 @@ void MainWindow::updateCliNum()
 void MainWindow::slot_connected(QString adr, int port)
 {
     ui->lineEditStan->setText("Połączono z " + adr + ":" + QString::number(port));
+    ui->lineEditStan->setStyleSheet("color: green;");
 }
 
 void MainWindow::slot_disconnected()
 {
     ui->lineEditStan->setText("Rozłączono");
+    ui->lineEditStan->setStyleSheet("color: red;");
 }
 
 void MainWindow::on_btnPolacz_clicked()
@@ -833,7 +840,8 @@ void MainWindow::on_btnPolacz_clicked()
             if(m_server != nullptr && m_server->isListening())
             {
                 m_server->stopListening();
-                ui->lineEditStan->setText("Start serwera");
+                ui->lineEditStan->setText("Zatrzymano serwer");
+                ui->lineEditStan->setStyleSheet("color: red;");
             }
             else
             {
@@ -841,12 +849,15 @@ void MainWindow::on_btnPolacz_clicked()
                 if(!validatePort(port))
                     return;
                 resetServer();
-                if(!m_server->startListening(port))
-                    ui->lineEditStan->setText("Error starting server!");
+                if(!m_server->startListening(port)) {
+                    ui->lineEditStan->setText("Error uruchamiania serwera!");
+                    ui->lineEditStan->setStyleSheet("color: red;");
+                }
                 else
                 {
                     //ui->lineEditStan->setText("Stop serwera");
                     ui->lineEditStan->setText("Serwer nasłuchuje na porcie " + QString::number(port));
+                     ui->lineEditStan->setStyleSheet("color: green;");
                 }
             }
         } else {
@@ -862,6 +873,7 @@ void MainWindow::on_btnPolacz_clicked()
                 return;
             resetClient();
             ui->lineEditStan->setText("[CLIENT]: Nasłuchiwanie na " + host + ":" + QString::number(port));
+             ui->lineEditStan->setStyleSheet("color: green;");
             m_client->connectTo(host,port);
         }
     }
