@@ -16,7 +16,7 @@ MyTCPClient::MyTCPClient(QObject *parent)
     });
 
     connect(m_socket, &QTcpSocket::errorOccurred, this, [](QAbstractSocket::SocketError socketError) {
-        qDebug() << "[CLIENT] Error occurred:" << socketError;
+        qDebug() << "[CLIENT] Error połączenia:" << socketError;
     });
 }
 
@@ -27,9 +27,9 @@ void MyTCPClient::connectTo(QString address, int port)
     m_socket->connectToHost(m_ipAddress, m_port);
 
     if (!m_socket->waitForConnected(3000)) {
-        qDebug() << "[CLIENT] Connection failed:" << m_socket->errorString();
+        qDebug() << "[CLIENT] Połączenie nie powiodło się:" << m_socket->errorString();
     } else {
-        qDebug() << "[CLIENT] Connected.";
+        qDebug() << "[CLIENT] Połączono.";
     }
 }
 
