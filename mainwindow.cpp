@@ -302,22 +302,22 @@ void MainWindow::updateChart()
         chartPID->axes(Qt::Horizontal).first()->setRange(t - withXAxis, t);
         chartSterowanie->axes(Qt::Horizontal).first()->setRange(t - withXAxis, t);
 
-        // double minTime = t - withXAxis;
-        // auto trimSeries = [minTime](QChart *chart) {
-        //     for (QAbstractSeries *series : chart->series()) {
-        //         if (QLineSeries *lineSeries = qobject_cast<QLineSeries *>(series)) {
-        //             QVector<QPointF> points = lineSeries->pointsVector();
-        //             while (!points.isEmpty() && points.first().x() < minTime) {
-        //                 points.removeFirst();
-        //             }
-        //             lineSeries->replace(points);
-        //         }
-        //     }
-        // };
-        // trimSeries(chart);
-        // trimSeries(chartError);
-        // trimSeries(chartPID);
-        // trimSeries(chartSterowanie);
+        double minTime = t - withXAxis;
+        auto trimSeries = [minTime](QChart *chart) {
+            for (QAbstractSeries *series : chart->series()) {
+                if (QLineSeries *lineSeries = qobject_cast<QLineSeries *>(series)) {
+                    QVector<QPointF> points = lineSeries->points();
+                    while (!points.isEmpty() && points.first().x() < minTime) {
+                        points.removeFirst();
+                    }
+                    lineSeries->replace(points);
+                }
+            }
+        };
+        trimSeries(chart);
+        trimSeries(chartError);
+        trimSeries(chartPID);
+        trimSeries(chartSterowanie);
     }
 }
 
