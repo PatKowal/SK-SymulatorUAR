@@ -749,7 +749,7 @@ bool MainWindow::validatePort(int port)
 {
     if(port < 0 || 65535 < port)
     {
-        ui->lineEditStan->setText("Invalid TCP port number!");
+        ui->lineEditStan->setText("Niepoprawny numer portu!");
         return false;
     }
     return true;
@@ -775,12 +775,12 @@ bool MainWindow::validateConnectionData(QString adr, int port)
     QHostAddress ipAdr(adr);
     if(ipAdr.protocol() != QAbstractSocket::IPv4Protocol)
     {
-        ui->lineEditStan->setText("Invalid IPv4 Address!");
+        ui->lineEditStan->setText("Niepoprawny adres IPv4!");
         return false;
     }
     if(port < 0 || 65535 < port)
     {
-        ui->lineEditStan->setText("Invalid TCP port number!");
+        ui->lineEditStan->setText("Nieprawidłowy numer portu!");
         return false;
     }
     return true;
@@ -812,12 +812,12 @@ void MainWindow::updateCliNum()
 
 void MainWindow::slot_connected(QString adr, int port)
 {
-    ui->lineEditStan->setText("Connected to " + adr + " " + QString::number(port));
+    ui->lineEditStan->setText("Połączono z " + adr + ":" + QString::number(port));
 }
 
 void MainWindow::slot_disconnected()
 {
-    ui->lineEditStan->setText("Disconnected");
+    ui->lineEditStan->setText("Rozłączono");
 }
 
 void MainWindow::on_btnPolacz_clicked()
