@@ -287,18 +287,7 @@ void MainWindow::updateChart()
                 .first()
                 ->setRange(vChartSterowanieMinRange, vChartSterowanieMaxRange);
         }
-        // if (pid->wartoscPID() > vChartSterowanieMaxRange - 0.1) {
-        //     vChartSterowanieMaxRange = pid->wartoscPID() + 0.1;
-        //     chartSterowanie->axes(Qt::Vertical)
-        //         .first()
-        //         ->setRange(vChartSterowanieMinRange, vChartSterowanieMaxRange);
-        // }
-        // if (pid->wartoscPID() < vChartSterowanieMinRange + 0.1) {
-        //     vChartSterowanieMinRange = pid->wartoscPID() - 0.1;
-        //     chartSterowanie->axes(Qt::Vertical)
-        //         .first()
-        //         ->setRange(vChartSterowanieMinRange, vChartSterowanieMaxRange);
-        // }
+
         pSeries->append(time, pid->czlonP());
         iSeries->append(time, pid->czlonI());
         dSeries->append(time, pid->czlonD());
