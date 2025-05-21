@@ -638,7 +638,7 @@ void MainWindow::on_pushButtonARX_clicked()
         ui->lineEditB->setText(bList.join(";"));
         ui->spinBoxK->setValue(opóźnienie);
 
-        // 🚀 Aktualizacja modelu ARX
+        // Aktualizacja modelu ARX
         std::vector<double> a, b;
         for (const QString &str : aList) {
             bool ok;
