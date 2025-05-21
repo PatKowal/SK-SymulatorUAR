@@ -46,6 +46,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->spinBoxPort->setRange(0,65535);
 
+    ui->groupBoxARX->setVisible(false);
+
     chart = new QChart;
     outSeries = new QLineSeries();
     outSeries->setName("Wartość regulowana");
