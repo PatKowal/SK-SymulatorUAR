@@ -131,11 +131,11 @@ void MyTCPServer::slotReadyRead()
         payloadStream.setVersion(QDataStream::Qt_6_0);
 
         if (type == 101) {
-            ModelARX model = Serializer::deserialize(payload);
-            qDebug() << "[SERVER] Received ModelARX A:" << model.getA()
-                     << "B:" << model.getB()
-                     << "k:" << model.getK()
-                     << "z:" << model.getZ();
+            // ModelARX model = Serializer::deserialize(payload);
+            // qDebug() << "[SERVER] Received ModelARX A:" << model.getA()
+            //          << "B:" << model.getB()
+            //          << "k:" << model.getK()
+            //          << "z:" << model.getZ();
         } else if (type == 102) {
             double result;
             qint64 timeonsend;

@@ -20,6 +20,8 @@ signals:
     void connected(QString adr, int port);
     void disconnected();
     void ModelARXRequest();
+    void StartSimOnClient();
+    void IntervalOnServerChanged(int value);
     void SymulujRequest(double value, qint64 timeonsend);
 
 private slots:

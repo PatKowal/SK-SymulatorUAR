@@ -69,6 +69,8 @@ private slots:
     void onModelARXRequest();
     void onSymulujRequest(double value, qint64 timeonsend);
     void onResultReceived(double result, qint64 timeonsend);
+    void onStartSimOnClient();
+    void onIntervalOnServerChanged(int value);
     void activeAll();
 
 private:
@@ -118,7 +120,7 @@ private:
     MyTCPClient *m_client = nullptr;
     bool trybStacjonarny = true;
 
-    double lastOutputReceived = 0.0;
+    double pidOutputReceived = 0.0;
     double OutputReceived = 0.0;
 };
 

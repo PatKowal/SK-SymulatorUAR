@@ -454,7 +454,7 @@ public:
         gridLayout_4->setObjectName("gridLayout_4");
         spinBoxInterval = new QSpinBox(groupBox_2);
         spinBoxInterval->setObjectName("spinBoxInterval");
-        spinBoxInterval->setMinimum(100);
+        spinBoxInterval->setMinimum(40);
         spinBoxInterval->setMaximum(2000);
 
         gridLayout_4->addWidget(spinBoxInterval, 0, 1, 1, 1);

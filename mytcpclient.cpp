@@ -77,7 +77,8 @@ void MyTCPClient::slotReadyRead()
         m_buffer.remove(0, 5 + size);
 
         if(type == 1){
-            emit ModelARXRequest();
+            emit StartSimOnClient();
+            // emit ModelARXRequest();
             // qDebug() << "[MainWindow] ModelARX emit ModelARX do serwera.";
         } else if (type == 2){
             QDataStream dataStream(&data, QIODevice::ReadOnly);
@@ -88,7 +89,10 @@ void MyTCPClient::slotReadyRead()
             // qDebug() << "[CLIENT] timeonsend" << timeonsend;
             emit SymulujRequest(value, timeonsend);
         } else if (type == 3) {
-            disconnectFrom();
+            QDataStream dataStream(&data, QIODevice::ReadOnly);
+            int value;
+            dataStream >> value;
+            emit IntervalOnServerChanged(value);
         }else {
             qDebug() << "[CLIENT] Nieznany typ wiadomości (nagłówke)" << type;
         }
