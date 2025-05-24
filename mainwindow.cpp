@@ -141,11 +141,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(timer, &QTimer::timeout, this, &MainWindow::updateChart);
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
-
+MainWindow::~MainWindow(){ delete ui; }
 void MainWindow::updateChart()
 {
     double input = 0;
