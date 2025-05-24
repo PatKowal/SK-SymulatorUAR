@@ -54,7 +54,6 @@ void MyTCPServer::sendFramedToClients(quint8 type, const QByteArray& data)
         if(client->state() == QAbstractSocket::ConnectedState){
             client->write(frame);
             client->flush();
-            // qDebug() << "[SERVER] wysłano wiadomość do klienta" << client;
         }
     }
 }
@@ -82,8 +81,6 @@ void MyTCPServer::slot_new_client()
 
     m_clients.append(client);
     int idx = m_clients.indexOf(client);
-    // QString clientMsg = "Hello client " + QString::number(idx);
-    // client->write(clientMsg.toUtf8());
 
     connect(client, &QTcpSocket::readyRead, this, &MyTCPServer::slotReadyRead);
     connect(client, &QTcpSocket::disconnected, this, &MyTCPServer::slot_client_disconnetcted);
@@ -130,26 +127,26 @@ void MyTCPServer::slotReadyRead()
         QDataStream payloadStream(&payload, QIODevice::ReadOnly);
         payloadStream.setVersion(QDataStream::Qt_6_0);
 
-        if (type == 101) {
-            // ModelARX model = Serializer::deserialize(payload);
-            // qDebug() << "[SERVER] Received ModelARX A:" << model.getA()
-            //          << "B:" << model.getB()
-            //          << "k:" << model.getK()
-            //          << "z:" << model.getZ();
-        } else if (type == 102) {
+        // if (type == 101) {
+        //     // ModelARX model = Serializer::deserialize(payload);
+        //     // qDebug() << "[SERVER] Received ModelARX A:" << model.getA()
+        //     //          << "B:" << model.getB()
+        //     //          << "k:" << model.getK()
+        //     //          << "z:" << model.getZ();
+        // } else
+        if (type == 102) {
             double result;
             qint64 timeonsend;
             payloadStream >> result >> timeonsend;
-            // qDebug() << "[SERVER] Received timeonsend:" << timeonsend;
-            // qDebug() << "[SERVER] Received dane result:" << result;
             emit resultReceived(result, timeonsend);
-        } else if (type == 103) {
-
-        } else {
-            qDebug() << "[SERVER] Unknown message type:" << type;
         }
+        // else if (type == 103) {
+        // }
+        // else {
+        //     qDebug() << "[SERVER] Unknown message type:" << type;
+        // }
 
-        emit newMsgFrom(QString(payload), clientIndex);
+        //emit newMsgFrom(QString(payload), clientIndex);
     }
 }
 
