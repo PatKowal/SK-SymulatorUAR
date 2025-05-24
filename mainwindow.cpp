@@ -255,6 +255,8 @@ void MainWindow::updateChart()
             rescaleYAxis(chartSterowanie);
             rescaleYAxis(chart);
 
+            //inSeries ->setVisible(false);
+
             sterowanieSeries->append(time, pidOutputReceived);
             outSeries->append(time, output);
         }
@@ -981,6 +983,7 @@ void MainWindow::on_buttonKonfSieciowa_clicked()
         ui->doubleSpinBoxNoise->setEnabled(!isRegulator);
         ui->chartWidgetError->setVisible(isRegulator);
         ui->widgetPID->setVisible(isRegulator);
+        inSeries ->setVisible(isRegulator);
 
         if (!isStacjonarny) {
             QString ip = ipEdit.text();
@@ -1019,4 +1022,5 @@ void MainWindow::activeAll(){
     ui->pushButtonARX->setEnabled(true);
     ui->chartWidgetError->setVisible(true);
     ui->widgetPID->setVisible(true);
+    inSeries ->setVisible(true);
 }
