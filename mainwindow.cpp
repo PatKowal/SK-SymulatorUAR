@@ -225,7 +225,6 @@ void MainWindow::updateChart()
         rescaleYAxis(chartError);
         rescaleYAxis(chart);
 
-
         pSeries->append(time, pid->czlonP());
         iSeries->append(time, pid->czlonI());
         dSeries->append(time, pid->czlonD());
@@ -285,9 +284,7 @@ void MainWindow::on_pushButtonStart_clicked()
         }
     }
     sygWe.push_back(1);
-
     timer->setInterval(newInterval);
-
     timer->start();
 }
 
@@ -438,31 +435,11 @@ void MainWindow::updateSettings()
     }
 }
 
-void MainWindow::on_pushButtonReset_clicked()
-{
-    resetDefaultValues();
-    resetAllSettings();
-}
-
+void MainWindow::on_pushButtonReset_clicked() { resetDefaultValues(); resetAllSettings(); }
 void MainWindow::on_pushButtonStop_clicked() { timer->stop(); }
-
-void MainWindow::on_spinBoxK_valueChanged(int arg1)
-{
-    qDebug() << __FUNCTION__;
-    updateSettings();
-}
-
-void MainWindow::on_lineEditA_editingFinished()
-{
-    qDebug() << __FUNCTION__;
-    updateSettings();
-}
-
-void MainWindow::on_lineEditB_editingFinished()
-{
-    qDebug() << __FUNCTION__;
-    updateSettings();
-}
+void MainWindow::on_spinBoxK_valueChanged(int arg1) { Q_UNUSED(arg1); updateSettings(); }
+void MainWindow::on_lineEditA_editingFinished() { updateSettings(); }
+void MainWindow::on_lineEditB_editingFinished() { updateSettings(); }
 
 void MainWindow::on_spinBoxInterval_editingFinished()
 {
@@ -626,55 +603,14 @@ void MainWindow::on_pushButtonARX_clicked()
     }
 }
 
-void MainWindow::on_doubleSpinBoxP_editingFinished()
-{
-    qDebug() << __FUNCTION__;
-    updateSettings();
-}
-
-void MainWindow::on_doubleSpinBoxI_editingFinished()
-{
-    qDebug() << __FUNCTION__;
-    updateSettings();
-}
-
-void MainWindow::on_doubleSpinBoxD_editingFinished()
-{
-    qDebug() << __FUNCTION__;
-    updateSettings();
-}
-
-void MainWindow::on_doubleSpinBoxNoise_editingFinished()
-{
-    qDebug() << __FUNCTION__;
-    updateSettings();
-}
-
-void MainWindow::on_doubleSpinBoxValue_editingFinished()
-{
-    qDebug() << __FUNCTION__;
-    WARTOSC = ui->doubleSpinBoxValue->value();
-    updateSettings();
-}
-
-void MainWindow::on_doubleSpinBoxTime_editingFinished()
-{
-    qDebug() << __FUNCTION__;
-    OKRES = ui->doubleSpinBoxTime->value();
-    updateSettings();
-}
-
-void MainWindow::on_doubleSpinBoxSinusAmp_editingFinished()
-{
-    qDebug() << __FUNCTION__;
-    AMPLITUDA = ui->doubleSpinBoxSinusAmp->value();
-    updateSettings();
-}
-
-void MainWindow::on_checkBoxCalkaPodSuma_toggled(bool checked)
-{
-    pid->ustawCalkaPodSuma(checked);
-}
+void MainWindow::on_doubleSpinBoxP_editingFinished() { updateSettings(); }
+void MainWindow::on_doubleSpinBoxI_editingFinished() { updateSettings(); }
+void MainWindow::on_doubleSpinBoxD_editingFinished() { updateSettings(); }
+void MainWindow::on_doubleSpinBoxNoise_editingFinished() { updateSettings(); }
+void MainWindow::on_doubleSpinBoxValue_editingFinished() { WARTOSC = ui->doubleSpinBoxValue->value(); updateSettings(); }
+void MainWindow::on_doubleSpinBoxTime_editingFinished(){ OKRES = ui->doubleSpinBoxTime->value(); updateSettings(); }
+void MainWindow::on_doubleSpinBoxSinusAmp_editingFinished() { AMPLITUDA = ui->doubleSpinBoxSinusAmp->value(); updateSettings(); }
+void MainWindow::on_checkBoxCalkaPodSuma_toggled(bool checked) { pid->ustawCalkaPodSuma(checked); }
 
 void MainWindow::onResultReceived(double result, qint64 timeonsend) {
     qint64 currtime = QDateTime::currentMSecsSinceEpoch();
@@ -768,11 +704,7 @@ void MainWindow::slot_clientDisconnected(int num)
     }
 }
 
-void MainWindow::updateCliNum()
-{
-    int numCli = m_server->getNumClients();
-    Q_UNUSED(numCli);
-}
+void MainWindow::updateCliNum() { int numCli = m_server->getNumClients(); Q_UNUSED(numCli); }
 
 void MainWindow::slot_connected(QString adr, int port)
 {
