@@ -154,47 +154,33 @@ MainWindow::~MainWindow()
 
 void MainWindow::updateChart()
 {
-    //qDebug() << "UDPATE";
     double input = 0;
 
     time += newInterval / 1000.0;
     qDebug() << "TIME: " << time;
 
     if (ui->radioButtonUnit->isChecked()) {
-        //qDebug() << "Unit";
-        // if(numerProbki != 0)
-        {
             input = WARTOSC;
-        }
-    } else if (ui->radioButtonRect->isChecked()) {
-        qDebug() << "RECT SIGNAL";
-
-        //if(/*numerProbki != 0 && */time < ui->doubleSpinBoxTime->value() )
-        {
+    }
+    else if (ui->radioButtonRect->isChecked()) {
             unsigned long long okres = OKRES;
             bool yes = (unsigned long long) time % okres < 0.5 * okres;
             input = yes ? WARTOSC : 0;
-        }
-    } else if (ui->radioButtonSinus->isChecked()) {
-        qDebug() << "Sinus";
-
-        //if(n != 0)
-        {
+    }
+    else if (ui->radioButtonSinus->isChecked()) {
             double x = (double) (2 * M_PI * time) / OKRES;
             input = WARTOSC + AMPLITUDA * sin(x);
-        }
     }
     double output = 0.0;
     if(ui->checkBoxTrybStacjonarny->isChecked()){
         output = uar->symuluj(input);
     } else {
         if(m_server != nullptr) {
-            if(ui->comboBoxRola->currentIndex() == 0 && m_server->getNumClients() > 0){ //Serwer
+            if(ui->comboBoxRola->currentIndex() == 0 && m_server->getNumClients() > 0){
                 double inputPid = input - OutputReceived;
                 double pidOutput = pid->symuluj(inputPid);
 
                 qint64 timeonsend = QDateTime::currentMSecsSinceEpoch();
-                // qDebug() << "[MAINWINDOW] timeonsend" << timeonsend;
                 QByteArray msg;
                 QDataStream out(&msg, QIODevice::WriteOnly);
                 out.setVersion(QDataStream::Qt_6_0);
@@ -263,7 +249,6 @@ void MainWindow::updateChart()
     }
 
     if (time > withXAxis) {
-        //double t = (n * ui->spinBoxInterval->value()) / 1000;
         double t = time;
         chart->axes(Qt::Horizontal).first()->setRange(t - withXAxis, t);
         chartError->axes(Qt::Horizontal).first()->setRange(t - withXAxis, t);
@@ -341,7 +326,6 @@ void MainWindow::resetChart()
 
     sterowanieSeries->clear();
 
-    // numerProbki = 0;
     time = 0;
 
     vChartMinRange = vChartMinRangeDefault;
@@ -620,7 +604,6 @@ void MainWindow::on_pushButtonARX_clicked()
         ui->lineEditB->setText(bList.join(";"));
         ui->spinBoxK->setValue(opóźnienie);
 
-        // Aktualizacja modelu ARX
         std::vector<double> a, b;
         for (const QString &str : aList) {
             bool ok;
@@ -640,8 +623,6 @@ void MainWindow::on_pushButtonARX_clicked()
         arx->ustawB(b);
         arx->ustawK(ui->spinBoxK->value());
         arx->ustawZ(ui->doubleSpinBoxNoise->value());
-
-        //double noise = ui->doubleSpinBoxNoise->value();
     }
 }
 
@@ -697,10 +678,7 @@ void MainWindow::on_checkBoxCalkaPodSuma_toggled(bool checked)
 
 void MainWindow::onResultReceived(double result, qint64 timeonsend) {
     qint64 currtime = QDateTime::currentMSecsSinceEpoch();
-    // qDebug() << "[CURRTIME] " << currtime;
-    // qDebug() << "[TIMEONSEND] " << timeonsend;
     qint64 ping = currtime - timeonsend;
-    // qDebug() << "[PING] " << ping;
     ui->labelPing->setText(QString("%1 ms").arg(ping));
     if(ping > newInterval){
         ui->labelPing->setStyleSheet("color: red;");
@@ -722,7 +700,6 @@ void MainWindow::resetServer()
     m_server = new MyTCPServer(this);
     connect(m_server,SIGNAL(newClientConnected(QString)),this,SLOT(slot_newClientConnected(QString)));
     connect(m_server,SIGNAL(clientDisconnetced(int)),this,SLOT(slot_clientDisconnected(int)));
-    //connect(m_server,SIGNAL(newMsgFrom(QString,int)),this,SLOT(slot_newMsgFrom(QString,int)));
     connect(m_server, &MyTCPServer::resultReceived, this, &MainWindow::onResultReceived);
 }
 
@@ -747,7 +724,6 @@ void MainWindow::resetClient()
     m_client = new MyTCPClient(this);
     connect(m_client,SIGNAL(connected(QString,int)),this,SLOT(slot_connected(QString,int)));
     connect(m_client,SIGNAL(disconnected()),this,SLOT(slot_disconnected()));
-    //connect(m_client,SIGNAL(messageRecived(QString)),this,SLOT(slot_messageRecived(QString)));
     connect(m_client, &MyTCPClient::ModelARXRequest, this, &MainWindow::onModelARXRequest);
     connect(m_client, &MyTCPClient::SymulujRequest, this, &MainWindow::onSymulujRequest);
     connect(m_client, &MyTCPClient::StartSimOnClient, this, &MainWindow::onStartSimOnClient);
@@ -866,7 +842,6 @@ void MainWindow::on_checkBoxTrybStacjonarny_stateChanged(int arg1)
         if(m_server != nullptr && m_server->isListening())
         {
             if(m_server->getNumClients() > 0){
-                //m_client->disconnectFrom(); // Trzeba dodać żeby to robił klienta po dostaniu informacji od serwera po sieci (Msg)
                 QByteArray msg;
                 m_server->sendFramedToClients(3,msg); // emit u klienta
             }
@@ -901,8 +876,6 @@ void MainWindow::onSymulujRequest(double value, qint64 timeonsend){
     out.setVersion(QDataStream::Qt_6_0);
     out << result << timeonsend;
     m_client->sendFramed(102, response);
-    // emit onStartSimOnClient();
-    // qDebug() << "[MainWindow] Wysłany result do serwera:" << result;
 }
 
 void MainWindow::onStartSimOnClient(){
