@@ -883,7 +883,6 @@ void MainWindow::on_btnPolacz_clicked()
         QString host = ui->lineEditIP->text();
 
         if (ui->comboBoxRola->currentIndex() == 0) {
-            // Regulator jako serwer
             if(m_client != nullptr){
                 m_client->disconnectFrom();
             }
@@ -905,13 +904,11 @@ void MainWindow::on_btnPolacz_clicked()
                 }
                 else
                 {
-                    //ui->lineEditStan->setText("Stop serwera");
                     ui->lineEditStan->setText("Serwer nasłuchuje na porcie " + QString::number(port));
-                     ui->lineEditStan->setStyleSheet("color: green;");
+                    ui->lineEditStan->setStyleSheet("color: green;");
                 }
             }
         } else {
-            // ModelARX jako klient
             if(m_server != nullptr && m_server->isListening())
             {
                 m_server->stopListening();
@@ -923,7 +920,7 @@ void MainWindow::on_btnPolacz_clicked()
                 return;
             resetClient();
             ui->lineEditStan->setText("[CLIENT]: Nasłuchiwanie na " + host + ":" + QString::number(port));
-             ui->lineEditStan->setStyleSheet("color: green;");
+            ui->lineEditStan->setStyleSheet("color: green;");
             m_client->connectTo(host,port);
         }
     }
@@ -1051,6 +1048,8 @@ void MainWindow::on_buttonKonfSieciowa_clicked()
 
         ui->pushButtonARX->setEnabled(!isRegulator);
         ui->doubleSpinBoxNoise->setEnabled(!isRegulator);
+        ui->chartWidgetError->setVisible(isRegulator);
+        ui->widgetPID->setVisible(isRegulator);
 
         if (!isStacjonarny) {
             QString ip = ipEdit.text();
@@ -1087,4 +1086,6 @@ void MainWindow::activeAll(){
     ui->doubleSpinBoxTime->setEnabled(true);
     ui->doubleSpinBoxValue->setEnabled(true);
     ui->pushButtonARX->setEnabled(true);
+    ui->chartWidgetError->setVisible(true);
+    ui->widgetPID->setVisible(true);
 }
