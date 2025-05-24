@@ -69,8 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(chartView);
 
-    // wykres error
-
+    // wykres error:
     chartError = new QChart;
     errSeries = new QLineSeries();
     errSeries->setName("Uchyb");
@@ -89,9 +88,7 @@ MainWindow::MainWindow(QWidget *parent)
     layoutError->setContentsMargins(0, 0, 0, 0);
     layoutError->addWidget(chartViewError);
 
-
-    // wykres PID
-
+    // wykres PID:
     chartPID = new QChart;
     pSeries = new QLineSeries();
     pSeries->setName("P");
@@ -116,9 +113,7 @@ MainWindow::MainWindow(QWidget *parent)
     layoutPID->setContentsMargins(0, 0, 0, 0);
     layoutPID->addWidget(chartPIDView);
 
-
-    // wykres sterowanie
-
+    // wykres sterowanie:
     chartSterowanie = new QChart;
     sterowanieSeries = new QLineSeries();
     sterowanieSeries->setName("Sterowanie");
@@ -138,7 +133,6 @@ MainWindow::MainWindow(QWidget *parent)
     auto layoutSterowanie = new QVBoxLayout(ui->widgetWartoscSterowania);
     layoutSterowanie->setContentsMargins(0, 0, 0, 0);
     layoutSterowanie->addWidget(chartSterowanieView);
-
 
     resetDefaultValues();
     resetAllSettings();
