@@ -21,6 +21,8 @@ signals:
     void disconnected();
     void ModelARXRequest();
     void StartSimOnClient();
+    void StopSimOnClient();
+    void ResetSimOnClient();
     void IntervalOnServerChanged(int value);
     void SymulujRequest(double value, qint64 timeonsend);
 

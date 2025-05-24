@@ -425,8 +425,29 @@ void MainWindow::updateSettings()
     }
 }
 
-void MainWindow::on_pushButtonReset_clicked() { resetDefaultValues(); resetAllSettings(); }
-void MainWindow::on_pushButtonStop_clicked() { timer->stop(); }
+void MainWindow::on_pushButtonReset_clicked() {
+    if(m_server != nullptr){
+        if(ui->comboBoxRola->currentIndex() == 0 && m_server->getNumClients() > 0){ //Serwer
+            QByteArray msg;
+            QDataStream out(&msg, QIODevice::WriteOnly);
+            out.setVersion(QDataStream::Qt_6_0);
+            m_server->sendFramedToClients(5,msg);
+        }
+    }
+    resetDefaultValues();
+    resetAllSettings();
+}
+void MainWindow::on_pushButtonStop_clicked() {
+    if(m_server != nullptr){
+        if(ui->comboBoxRola->currentIndex() == 0 && m_server->getNumClients() > 0){ //Serwer
+            QByteArray msg;
+            QDataStream out(&msg, QIODevice::WriteOnly);
+            out.setVersion(QDataStream::Qt_6_0);
+            m_server->sendFramedToClients(4,msg);
+        }
+    }
+    timer->stop();
+}
 void MainWindow::on_spinBoxK_valueChanged(int arg1) { Q_UNUSED(arg1); updateSettings(); }
 void MainWindow::on_lineEditA_editingFinished() { updateSettings(); }
 void MainWindow::on_lineEditB_editingFinished() { updateSettings(); }
@@ -652,7 +673,11 @@ void MainWindow::resetClient()
     connect(m_client,SIGNAL(disconnected()),this,SLOT(slot_disconnected()));
     connect(m_client, &MyTCPClient::ModelARXRequest, this, &MainWindow::onModelARXRequest);
     connect(m_client, &MyTCPClient::SymulujRequest, this, &MainWindow::onSymulujRequest);
+
     connect(m_client, &MyTCPClient::StartSimOnClient, this, &MainWindow::onStartSimOnClient);
+    connect(m_client, &MyTCPClient::StopSimOnClient, this, &MainWindow::onStopSimOnClient);
+    connect(m_client, &MyTCPClient::ResetSimOnClient, this, &MainWindow::onResetSimOnClient);
+
     connect(m_client, &MyTCPClient::IntervalOnServerChanged, this, &MainWindow::onIntervalOnServerChanged);
 }
 
@@ -800,12 +825,9 @@ void MainWindow::onSymulujRequest(double value, qint64 timeonsend){
     m_client->sendFramed(102, response);
 }
 
-void MainWindow::onStartSimOnClient(){
-    if(m_client!=nullptr){
-        qDebug() << "[CLIENT] - uruhomienie sim";
-    }
-    on_pushButtonStart_clicked();
-}
+void MainWindow::onStartSimOnClient(){ on_pushButtonStart_clicked(); }
+void MainWindow::onStopSimOnClient(){ on_pushButtonStop_clicked(); }
+void MainWindow::onResetSimOnClient(){ on_pushButtonReset_clicked(); }
 
 void MainWindow::on_buttonKonfSieciowa_clicked()
 {

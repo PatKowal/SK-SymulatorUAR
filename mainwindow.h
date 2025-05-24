@@ -71,6 +71,8 @@ private slots:
     void onResultReceived(double result, qint64 timeonsend);
     void onStartSimOnClient();
     void onIntervalOnServerChanged(int value);
+    void onStopSimOnClient();
+    void onResetSimOnClient();
     void activeAll();
 
 private:

@@ -76,25 +76,62 @@ void MyTCPClient::slotReadyRead()
 
         m_buffer.remove(0, 5 + size);
 
-        if(type == 1){
+        switch(type){
+        case 1: {
             emit StartSimOnClient();
             // emit ModelARXRequest();
             // qDebug() << "[MainWindow] ModelARX emit ModelARX do serwera.";
-        } else if (type == 2){
+            break;
+        }
+        case 2: {
             QDataStream dataStream(&data, QIODevice::ReadOnly);
             double value;
             qint64 timeonsend;
-
             dataStream >> value >> timeonsend;
             // qDebug() << "[CLIENT] timeonsend" << timeonsend;
             emit SymulujRequest(value, timeonsend);
-        } else if (type == 3) {
+            break;
+        }
+        case 3: {
             QDataStream dataStream(&data, QIODevice::ReadOnly);
             int value;
             dataStream >> value;
             emit IntervalOnServerChanged(value);
-        }else {
+            break;
+        }
+        case 4: {
+            emit StopSimOnClient();
+            break;
+        }
+        case 5: {
+            emit ResetSimOnClient();
+            break;
+        }
+        default:
             qDebug() << "[CLIENT] Nieznany typ wiadomości (nagłówke)" << type;
         }
+
+        // if(type == 1){
+        //     emit StartSimOnClient();
+        //     // emit ModelARXRequest();
+        //     // qDebug() << "[MainWindow] ModelARX emit ModelARX do serwera.";
+        // } else if (type == 2){
+        //     QDataStream dataStream(&data, QIODevice::ReadOnly);
+        //     double value;
+        //     qint64 timeonsend;
+
+        //     dataStream >> value >> timeonsend;
+        //     // qDebug() << "[CLIENT] timeonsend" << timeonsend;
+        //     emit SymulujRequest(value, timeonsend);
+        // } else if (type == 3) {
+        //     QDataStream dataStream(&data, QIODevice::ReadOnly);
+        //     int value;
+        //     dataStream >> value;
+        //     emit IntervalOnServerChanged(value);
+        // }else if (type == 4) {
+
+        // } else {
+        //     qDebug() << "[CLIENT] Nieznany typ wiadomości (nagłówke)" << type;
+        // }
     }
 }
