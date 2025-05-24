@@ -209,86 +209,36 @@ void MainWindow::updateChart()
         }
     }
 
-    if(ui->checkBoxTrybStacjonarny->isChecked() || (ui->comboBoxRola->currentIndex() == 0 && m_server->getNumClients() > 0)){
-        // skalowanie w pionie wykres 1
-        if (output > vChartMaxRange - 0.1) {
-            vChartMaxRange = output + 0.1;
-            chart->axes(Qt::Vertical).first()->setRange(vChartMinRange, vChartMaxRange);
+    auto rescaleYAxis = [](QChart *chart) {
+        double minVal = std::numeric_limits<double>::max();
+        double maxVal = std::numeric_limits<double>::lowest();
+
+        for (auto series : chart->series()) {
+            if (auto lineSeries = qobject_cast<QLineSeries*>(series)) {
+                for (const QPointF &point : lineSeries->points()) {
+                    minVal = std::min(minVal, point.y());
+                    maxVal = std::max(maxVal, point.y());
+                }
+            }
         }
 
-        if (output < vChartMinRange + 0.1) {
-            vChartMinRange = output - 0.1;
-            chart->axes(Qt::Vertical).first()->setRange(vChartMinRange, vChartMaxRange);
+        if (minVal >= maxVal || (fabs(minVal) < 0.1 && fabs(maxVal) < 0.1)) {
+            chart->axes(Qt::Vertical).first()->setRange(-0.1, 0.1);
+        } else {
+            chart->axes(Qt::Vertical).first()->setRange(
+                minVal - 0.1 * fabs(minVal),
+                maxVal + 0.1 * fabs(maxVal)
+                );
         }
+    };
 
-        if (input > vChartMaxRange - 0.1) {
-            vChartMaxRange = input + 0.1;
-            chart->axes(Qt::Vertical).first()->setRange(vChartMinRange, vChartMaxRange);
-        }
+     if(ui->checkBoxTrybStacjonarny->isChecked() || (ui->comboBoxRola->currentIndex() == 0 && m_server->getNumClients() > 0)){
 
-        if (input < vChartMinRange + 0.1) {
-            vChartMinRange = input - 0.1;
-            chart->axes(Qt::Vertical).first()->setRange(vChartMinRange, vChartMaxRange);
-        }
+        rescaleYAxis(chartPID);
+        rescaleYAxis(chartSterowanie);
+        rescaleYAxis(chartError);
+        rescaleYAxis(chart);
 
-        // skalowanie wykres error
-
-        if (fabs(input - output) > vChartErrorMaxRange - 0.1) {
-            vChartErrorMaxRange = fabs(input - output) + 0.1;
-            chartError->axes(Qt::Vertical).first()->setRange(vChartErrorMinRange, vChartErrorMaxRange);
-        }
-
-        if (fabs(input - output) < vChartErrorMinRange + 0.1) {
-            vChartErrorMinRange = fabs(input - output) - 0.1;
-            chartError->axes(Qt::Vertical).first()->setRange(vChartErrorMinRange, vChartErrorMaxRange);
-        }
-
-        // skalowanie w pionie wykres PID
-
-        if (pid->czlonP() > vChartPIDMaxRange - 0.1) {
-            vChartPIDMaxRange = pid->czlonP() + 0.1;
-            chartPID->axes(Qt::Vertical).first()->setRange(vChartPIDMinRange, vChartPIDMaxRange);
-        }
-
-        if (pid->czlonP() < vChartPIDMinRange + 0.1) {
-            vChartPIDMinRange = pid->czlonP() - 0.1;
-            chartPID->axes(Qt::Vertical).first()->setRange(vChartPIDMinRange, vChartPIDMaxRange);
-        }
-
-        if (pid->czlonI() > vChartPIDMaxRange - 0.1) {
-            vChartPIDMaxRange = pid->czlonI() + 0.1;
-            chartPID->axes(Qt::Vertical).first()->setRange(vChartPIDMinRange, vChartPIDMaxRange);
-        }
-
-        if (pid->czlonI() < vChartPIDMinRange + 0.1) {
-            vChartPIDMinRange = pid->czlonI() - 0.1;
-            chartPID->axes(Qt::Vertical).first()->setRange(vChartPIDMinRange, vChartPIDMaxRange);
-        }
-
-        if (pid->czlonD() > vChartPIDMaxRange - 0.1) {
-            vChartPIDMaxRange = pid->czlonD() + 0.1;
-            chartPID->axes(Qt::Vertical).first()->setRange(vChartPIDMinRange, vChartPIDMaxRange);
-        }
-
-        if (pid->czlonD() < vChartPIDMinRange + 0.1) {
-            vChartPIDMinRange = pid->czlonD() - 0.1;
-            chartPID->axes(Qt::Vertical).first()->setRange(vChartPIDMinRange, vChartPIDMaxRange);
-        }
-
-        // skalowanie wykres sterowanie
-        if (pid->wartoscPID() > vChartSterowanieMaxRange - 0.1) {
-            vChartSterowanieMaxRange = pid->wartoscPID() + 0.1;
-            chartSterowanie->axes(Qt::Vertical)
-                .first()
-                ->setRange(vChartSterowanieMinRange, vChartSterowanieMaxRange);
-        }
-
-        if (pid->wartoscPID() < vChartSterowanieMinRange + 0.1) {
-            vChartSterowanieMinRange = pid->wartoscPID() - 0.1;
-            chartSterowanie->axes(Qt::Vertical)
-                .first()
-                ->setRange(vChartSterowanieMinRange, vChartSterowanieMaxRange);
-        }
 
         pSeries->append(time, pid->czlonP());
         iSeries->append(time, pid->czlonI());
@@ -302,28 +252,9 @@ void MainWindow::updateChart()
     }
     else {
         if(!ui->checkBoxTrybStacjonarny->isChecked() && m_client != nullptr && m_client->isConnected()){
-            if (pidOutputReceived > vChartSterowanieMaxRange - 0.1) {
-                vChartSterowanieMaxRange = pidOutputReceived + 0.1;
-                chartSterowanie->axes(Qt::Vertical)
-                    .first()
-                    ->setRange(vChartSterowanieMinRange, vChartSterowanieMaxRange);
-            }
+            rescaleYAxis(chartSterowanie);
+            rescaleYAxis(chart);
 
-            if (pidOutputReceived < vChartSterowanieMinRange + 0.1) {
-                vChartSterowanieMinRange = pidOutputReceived - 0.1;
-                chartSterowanie->axes(Qt::Vertical)
-                    .first()
-                    ->setRange(vChartSterowanieMinRange, vChartSterowanieMaxRange);
-            }
-            if (output > vChartMaxRange - 0.1) {
-                vChartMaxRange = output + 0.1;
-                chart->axes(Qt::Vertical).first()->setRange(vChartMinRange, vChartMaxRange);
-            }
-
-            if (output < vChartMinRange + 0.1) {
-                vChartMinRange = output - 0.1;
-                chart->axes(Qt::Vertical).first()->setRange(vChartMinRange, vChartMaxRange);
-            }
             sterowanieSeries->append(time, pidOutputReceived);
             outSeries->append(time, output);
         }
