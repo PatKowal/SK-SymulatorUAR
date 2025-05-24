@@ -139,12 +139,18 @@ void MyTCPServer::slotReadyRead()
             qint64 timeonsend;
             payloadStream >> result >> timeonsend;
             emit resultReceived(result, timeonsend);
-        } else if (type == 103) {
-
-        } else {
-            qDebug() << "[SERVER] Unknown message type:" << type;
         }
+        // else if (type == 103) {
+        // }
+        // else {
+        //     qDebug() << "[SERVER] Unknown message type:" << type;
+        // }
 
-        emit newMsgFrom(QString(payload), clientIndex);
+        //emit newMsgFrom(QString(payload), clientIndex);
     }
+}
+
+void MyTCPServer::slot_newMsg()
+{
+    // Optional handler if needed — can be connected to emit signals for external handling
 }
