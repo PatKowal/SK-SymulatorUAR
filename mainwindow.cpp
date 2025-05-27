@@ -732,6 +732,8 @@ void MainWindow::slot_disconnected()
 {
     ui->lineEditStan->setText("Rozłączono");
     ui->lineEditStan->setStyleSheet("color: red;");
+    ui->checkBoxTrybStacjonarny->setChecked(true);
+    activeAll();
 }
 
 void MainWindow::on_btnPolacz_clicked()
@@ -795,11 +797,17 @@ void MainWindow::on_checkBoxTrybStacjonarny_stateChanged(int arg1)
             }
             m_server->stopListening();
             ui->lineEditStan->setText("Zerwanie połączenia zmieniam na pracę stacjonarną.");
+            ui->lineEditStan->setStyleSheet("color: red;");
             activeAll();
         }
     } else{
+        if(m_client != nullptr && !m_client->isConnected())
+        {
         m_client->disconnectFrom();
-        ui->lineEditStan->setText("Serwer jest wyłączony");
+        // ui->lineEditStan->setText("Serwer jest wyłączony");
+        } else {
+            ui->lineEditStan->setText("Serwer jest wyłączony");
+        }
     }
 }
 
