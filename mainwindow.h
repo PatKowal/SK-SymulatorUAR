@@ -67,7 +67,7 @@ private slots:
     void on_buttonKonfSieciowa_clicked();
 
     void onModelARXRequest();
-    void onSymulujRequest(double value, qint64 timeonsend);
+    void onSymulujRequest(double inputReceived, double value, qint64 timeonsend);
     void onResultReceived(double result, qint64 timeonsend);
     void onStartSimOnClient();
     void onIntervalOnServerChanged(int value);
@@ -124,6 +124,7 @@ private:
 
     double pidOutputReceived = 0.0;
     double OutputReceived = 0.0;
+    double inputReceived = 0.0;
 };
 
 #endif // MAINWINDOW_H

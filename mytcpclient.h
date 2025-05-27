@@ -12,8 +12,6 @@ public:
     void connectTo(QString address, int port);
     void disconnectFrom();
     bool isConnected() {return m_socket->isOpen();}
-    // void sendMsg(QString msg);
-
     void sendFramed(quint8 type, const QByteArray& data);
     QTcpSocket* getSocket() { return m_socket; } // isValid()?
 signals:
@@ -24,7 +22,7 @@ signals:
     void StopSimOnClient();
     void ResetSimOnClient();
     void IntervalOnServerChanged(int value);
-    void SymulujRequest(double value, qint64 timeonsend);
+    void SymulujRequest(double inputReceived, double value, qint64 timeonsend);
 
 private slots:
     void slot_connected();

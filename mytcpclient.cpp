@@ -85,11 +85,11 @@ void MyTCPClient::slotReadyRead()
         }
         case 2: {
             QDataStream dataStream(&data, QIODevice::ReadOnly);
-            double value;
+            double input, value;
             qint64 timeonsend;
-            dataStream >> value >> timeonsend;
+            dataStream >> input >> value >> timeonsend;
             // qDebug() << "[CLIENT] timeonsend" << timeonsend;
-            emit SymulujRequest(value, timeonsend);
+            emit SymulujRequest(input, value, timeonsend);
             break;
         }
         case 3: {

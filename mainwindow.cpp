@@ -174,7 +174,7 @@ void MainWindow::updateChart()
                 QByteArray msg;
                 QDataStream out(&msg, QIODevice::WriteOnly);
                 out.setVersion(QDataStream::Qt_6_0);
-                out << pidOutput << timeonsend;
+                out << input << pidOutput << timeonsend;
                 m_server->sendFramedToClients(2,msg);
 
                 output = OutputReceived;
@@ -234,6 +234,7 @@ void MainWindow::updateChart()
 
             sterowanieSeries->append(time, pidOutputReceived);
             outSeries->append(time, output);
+            inSeries->append(time, inputReceived);
         }
     }
 
@@ -814,10 +815,11 @@ void MainWindow::onIntervalOnServerChanged(int value){
     on_spinBoxInterval_editingFinished();
 }
 
-void MainWindow::onSymulujRequest(double value, qint64 timeonsend){
+void MainWindow::onSymulujRequest(double inputReceived, double value, qint64 timeonsend){
     double result = arx->symuluj(value);
     pidOutputReceived = value;
     OutputReceived = result;
+    this->inputReceived = inputReceived;
     QByteArray response;
     QDataStream out(&response, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_6_0);
@@ -900,7 +902,6 @@ void MainWindow::on_buttonKonfSieciowa_clicked()
         ui->doubleSpinBoxNoise->setEnabled(!isRegulator);
         ui->chartWidgetError->setVisible(isRegulator);
         ui->widgetPID->setVisible(isRegulator);
-        inSeries ->setVisible(isRegulator);
 
         if (!isStacjonarny) {
             QString ip = ipEdit.text();
@@ -939,5 +940,4 @@ void MainWindow::activeAll(){
     ui->pushButtonARX->setEnabled(true);
     ui->chartWidgetError->setVisible(true);
     ui->widgetPID->setVisible(true);
-    inSeries ->setVisible(true);
 }
